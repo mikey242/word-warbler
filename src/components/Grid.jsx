@@ -1,17 +1,23 @@
+import { CurrentRow } from "./CurrentRow"
 import { Row } from "./Row"
 
 const Grid = ({current, guesses}) => {
 
-    const combined = [...guesses, [...current]]
+    // Generate blank rows
+    const blanks = guesses.length < 5 ? Array.from(Array( 5 - guesses.length)) : []
 
     return (
         <div className="grid grid-rows-4 gap-3">
-            <Row letters={combined[0]}/>
-            <Row letters={combined[1]}/>
-            <Row letters={combined[2]}/>
-            <Row letters={combined[3]}/>
-            <Row letters={combined[4]}/>
-            <Row letters={combined[5]}/>
+            {/* Previously guessed */}
+            {guesses.map((guess, i) => (
+                <Row key={i} letters={guess} />
+            ))}
+            {/* Current guess */}
+            {guesses.length < 6 && <CurrentRow letters={ current.split("")} />}
+            {/* Remaining blank rows */}
+            {blanks.map((_, i) => (
+                <Row key={i} />
+            ))}
         </div>
     )
 }
