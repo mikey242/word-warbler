@@ -174,11 +174,9 @@ class App extends Component {
 
   render() {
     return (
-      <>
-        <div className="max-w-sm md:max-w-md md mx-auto px-5 text-center">
-          <h1 className="text-3xl mt-0 font-bold underline my-5">Word Game</h1>
-          <Grid current={this.state.current} guesses={this.state.guesses} />
-        </div>
+      <div className="flex flex-col items-center justify-between h-full">
+        <h1 className="text-3xl font-bold underline my-5">Word Game</h1>
+        <Grid current={this.state.current} guesses={this.state.guesses} />
         <Keyboard
           handleSubmit={this.handleSubmit}
           handleDelete={this.handleDelete}
@@ -193,32 +191,38 @@ class App extends Component {
                 <span> is not a word!</span>
               </>
             }
-            footer={<Button label="OK" onClick={this.clearIncorrect} />}
+            buttonLabel={"OK"}
+            onClickButton={this.clearIncorrect}
           />
         )}
 
         {this.state.isGameLost && (
           <Modal
-            header="You Lose!"
+            header="Game over"
             body={
               <>
                 <span>The hidden word was: </span>
                 <strong>{this.state.hiddenWord}</strong>
               </>
             }
-            footer={<Button label="Play again" onClick={this.reset} />}
+            buttonLabel={"Try again"}
+            onClickButton={this.reset}
           />
         )}
         {this.state.isGameWon && (
           <Modal
             header="You Win!"
             body={
-              <><span>Number of tries: </span>{this.state.guesses.length}</>
+              <>
+                <span>Number of tries: </span>
+                {this.state.guesses.length}
+              </>
             }
-            footer={<Button label="Play again" onClick={this.reset} />}
+            buttonLabel={"Play again"}
+            onClickButton={this.reset}
           />
         )}
-      </>
+      </div>
     );
   }
 }
