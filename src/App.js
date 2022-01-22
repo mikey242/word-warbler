@@ -14,6 +14,7 @@ class App extends Component {
     this.state = {
       isGameWon: false,
       isGameLost: false,
+      isNotWord: false,
       guesses: [],
       hiddenWord: this.getHiddenWord(),
       current: "",
@@ -24,6 +25,7 @@ class App extends Component {
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
     this.reset = this.reset.bind(this);
+    this.clearIncorrect = this.clearIncorrect.bind(this);
   }
 
   componentDidMount() {
@@ -44,7 +46,11 @@ class App extends Component {
   }
 
   isValidGuess() {
-    return WORDS.includes(this.state.current.toLowerCase());
+    if (WORDS.includes(this.state.current.toLowerCase())) return true;
+    this.setState({
+      isNotWord: true,
+    });
+    return false;
   }
 
   handleKeyPress(e) {
@@ -110,12 +116,11 @@ class App extends Component {
 
     // Check if answer is correct.
     if (this.isCorrect()) {
-      this.setState({
+      return this.setState({
         guesses: [...this.state.guesses, current],
         isGameWon: true,
         current: "",
       });
-      return;
     }
 
     // Clean empty values.
@@ -134,16 +139,23 @@ class App extends Component {
     });
 
     // Save result to state.
-    this.setState({
-      guesses: [...this.state.guesses, current],
-      current: "",
-    });
+    this.setState(
+      {
+        guesses: [...this.state.guesses, current],
+        current: "",
+      },
+      () => {
+        if (this.state.guesses.length > 5) {
+          this.setState({
+            isGameLost: true,
+          });
+        }
+      }
+    );
+  }
 
-    if (this.state.guesses.length > 5) {
-      this.setState({
-        isGameLost: true,
-      });
-    }
+  clearIncorrect() {
+    this.setState({ isNotWord: false });
   }
 
   isCorrect() {
@@ -165,32 +177,47 @@ class App extends Component {
       <>
         <div className="max-w-sm md:max-w-md md mx-auto px-5 text-center">
           <h1 className="text-3xl mt-0 font-bold underline my-5">Word Game</h1>
-
           <Grid current={this.state.current} guesses={this.state.guesses} />
-          {this.state.isGameLost && (
-            <Modal
-              header="You Lose!"
-              body={
-                <>
-                  <span>The hidden word was: </span>
-                  <strong>{this.state.hiddenWord}</strong>
-                </>
-              }
-              footer={<Button label="Play again" onClick={this.reset} />}
-            />
-          )}
-          {this.state.isGameWon && (
-            <Modal
-              header="You Win!"
-              footer={<Button label="Play again" onClick={this.reset} />}
-            />
-          )}
         </div>
         <Keyboard
           handleSubmit={this.handleSubmit}
           handleDelete={this.handleDelete}
           handleCharacter={this.handleCharacter}
         />
+        {this.state.isNotWord && (
+          <Modal
+            header="Not a word"
+            body={
+              <>
+                <strong>"{this.state.current}"</strong>
+                <span> is not a word!</span>
+              </>
+            }
+            footer={<Button label="OK" onClick={this.clearIncorrect} />}
+          />
+        )}
+
+        {this.state.isGameLost && (
+          <Modal
+            header="You Lose!"
+            body={
+              <>
+                <span>The hidden word was: </span>
+                <strong>{this.state.hiddenWord}</strong>
+              </>
+            }
+            footer={<Button label="Play again" onClick={this.reset} />}
+          />
+        )}
+        {this.state.isGameWon && (
+          <Modal
+            header="You Win!"
+            body={
+              <><span>Number of tries: </span>{this.state.guesses.length}</>
+            }
+            footer={<Button label="Play again" onClick={this.reset} />}
+          />
+        )}
       </>
     );
   }
