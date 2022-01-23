@@ -2,10 +2,15 @@ module.exports = {
   content: ["./src/**/*.{html,js,jsx}"],
   theme: {
     extend: {
-      animation: {
-        'spin-slow': 'spin 3s linear once',
-      }
+      animation: { press: "press 200ms ease-in-out infinite" },
+      keyframes: {
+        press: {
+          "0%": { transform: "translateY(0)" },
+          "75%": { transform: "translateY(3px)" },
+          "100": { transform: "translateY(0)" },
+        },
+      },
     },
   },
   plugins: [],
-}
+};

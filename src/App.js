@@ -113,11 +113,18 @@ class App extends Component {
 
     // Check if answer is correct.
     if (this.isCorrect()) {
-      return this.setState({
-        guesses: [...this.state.guesses, current],
-        isGameWon: true,
-        current: "",
-      });
+      return this.setState(
+        {
+          guesses: [...this.state.guesses, current],
+          current: "",
+        },
+        () =>
+          setTimeout(() => {
+            this.setState({
+              isGameWon: true,
+            });
+          }, 500)
+      );
     }
 
     // Clean empty values.
@@ -143,9 +150,11 @@ class App extends Component {
       },
       () => {
         if (this.state.guesses.length > 5) {
-          this.setState({
-            isGameLost: true,
-          });
+          setTimeout(() => {
+            this.setState({
+              isGameLost: true,
+            });
+          }, 500);
         }
       }
     );
@@ -168,7 +177,7 @@ class App extends Component {
   render() {
     return (
       <div className="flex flex-col items-center justify-between h-full max-w-[600px] mx-auto my-0">
-        <h1 className="text-3xl font-bold underline my-5">Warbler</h1>
+        <h1 className="text-3xl font-bold my-5">Warbler</h1>
         <Grid current={this.state.current} guesses={this.state.guesses} />
         <Keyboard
           handleSubmit={this.handleSubmit}
