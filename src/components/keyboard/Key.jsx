@@ -8,7 +8,7 @@ const Key = ({character, status, onClick}) => {
                 status === 0 && 'bg-gray-300',
                 status === 1 && "bg-orange-400",
                 status === 2 && "bg-green-400",
-                "flex items-center justify-center cursor-pointer text-white border bg-gray-900 h-12 min-w-0 p-5 shadow-md rounded-md"
+                "key flex items-center justify-center cursor-pointer text-white mr-1 bg-gray-900 h-12 min-w-0 p-4 mb-1 shadow-md rounded-md"
             )}>
                 <p className='select-none font-bold uppercase text-sm sm:text-xl'>{character}</p>
         </div>

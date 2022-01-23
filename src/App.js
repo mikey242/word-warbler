@@ -3,13 +3,12 @@ import { WORDS } from "./constants/words";
 import { Grid } from "./components/grid/Grid";
 import { Component } from "react";
 import { removeEmpty } from "./util/helpers";
-import { Button } from "./components/Button";
 import { Keyboard } from "./components/keyboard/Keyboard";
 import { Modal } from "./components/Modal";
 
 class App extends Component {
   constructor(props) {
-    super();
+    super(props);
 
     this.state = {
       isGameWon: false,
@@ -25,12 +24,10 @@ class App extends Component {
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
     this.reset = this.reset.bind(this);
-    this.clearIncorrect = this.clearIncorrect.bind(this);
   }
 
   componentDidMount() {
     this.createEventListeners();
-    console.log(this.state.hiddenWord);
   }
 
   createEventListeners() {
@@ -154,10 +151,6 @@ class App extends Component {
     );
   }
 
-  clearIncorrect() {
-    this.setState({ isNotWord: false });
-  }
-
   isCorrect() {
     return this.state.current === this.state.hiddenWord;
   }
@@ -174,8 +167,8 @@ class App extends Component {
 
   render() {
     return (
-      <div className="flex flex-col items-center justify-between h-full">
-        <h1 className="text-3xl font-bold underline my-5">Word Game</h1>
+      <div className="flex flex-col items-center justify-between h-full max-w-[600px] mx-auto my-0">
+        <h1 className="text-3xl font-bold underline my-5">Warbler</h1>
         <Grid current={this.state.current} guesses={this.state.guesses} />
         <Keyboard
           handleSubmit={this.handleSubmit}
@@ -192,10 +185,9 @@ class App extends Component {
               </>
             }
             buttonLabel={"OK"}
-            onClickButton={this.clearIncorrect}
+            onClickButton={() => this.setState({ isNotWord: false })}
           />
         )}
-
         {this.state.isGameLost && (
           <Modal
             header="Game over"
@@ -218,7 +210,7 @@ class App extends Component {
                 {this.state.guesses.length}
               </>
             }
-            buttonLabel={"Play again"}
+            buttonLabel={"New game"}
             onClickButton={this.reset}
           />
         )}
