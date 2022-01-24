@@ -2,11 +2,11 @@ module.exports = {
   content: ["./src/**/*.{html,js,jsx}"],
   theme: {
     extend: {
-      animation: { press: "press 200ms ease-in-out infinite" },
+      animation: { press: "press 200ms ease-in-out" },
       keyframes: {
         press: {
           "0%": { transform: "translateY(0)" },
-          "75%": { transform: "translateY(3px)" },
+          "75%": { transform: "translateY(5px)" },
           "100": { transform: "translateY(0)" },
         },
       },

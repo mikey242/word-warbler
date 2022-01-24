@@ -1,231 +1,185 @@
 import "./App.css";
 import { WORDS } from "./constants/words";
 import { Grid } from "./components/grid/Grid";
-import { Component } from "react";
+import { useEffect, useState } from "react";
 import { removeEmpty } from "./util/helpers";
 import { Keyboard } from "./components/keyboard/Keyboard";
 import { Modal } from "./components/Modal";
 
-class App extends Component {
-  constructor(props) {
-    super(props);
+function App() {
+  const [isGameWon, setIsGameWon] = useState(false);
+  const [isGameLost, setIsGameLost] = useState(false);
+  const [isNotWord, setIsNotWord] = useState(false);
+  const [guesses, setGuesses] = useState([]);
+  const [hiddenWord, setHiddenWord] = useState("");
+  const [currentGuess, setCurrentGuess] = useState("");
 
-    this.state = {
-      isGameWon: false,
-      isGameLost: false,
-      isNotWord: false,
-      guesses: [],
-      hiddenWord: this.getHiddenWord(),
-      current: "",
-    };
+  useEffect(() => {
+    setHiddenWord(getHiddenWord());
+  }, []);
 
-    this.handleKeyPress = this.handleKeyPress.bind(this);
-    this.handleCharacter = this.handleCharacter.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
-    this.handleDelete = this.handleDelete.bind(this);
-    this.reset = this.reset.bind(this);
-  }
+  useEffect(() => {
+    window.addEventListener("keydown", handleKeyPress);
+    return () => window.removeEventListener("keydown", handleKeyPress);
+  });
 
-  componentDidMount() {
-    this.createEventListeners();
-  }
+  useEffect(() => {
+    const latest = guesses
+      .at(-1)
+      ?.map((item) => {
+        return item.letter;
+      })
+      .join("");
+    if (latest === hiddenWord) {
+      return setTimeout(() => {
+        setIsGameWon(true);
+      }, 1000);
+    }
 
-  createEventListeners() {
-    document.addEventListener("keydown", this.handleKeyPress);
-  }
+    if (guesses.length > 5) {
+      return setTimeout(() => {
+        setIsGameLost(true);
+      }, 1000);
+    }
+  }, [guesses, hiddenWord]);
 
-  removeEventListeners() {
-    document.removeEventListener("keydown", this.handleKeyPress);
-  }
-
-  getHiddenWord() {
+  const getHiddenWord = () => {
     return WORDS[Math.floor(Math.random() * WORDS.length)].toUpperCase();
-  }
+  };
 
-  isValidGuess() {
-    if (WORDS.includes(this.state.current.toLowerCase())) return true;
-    this.setState({
-      isNotWord: true,
-    });
+  const isValidGuess = () => {
+    if (WORDS.includes(currentGuess.toLowerCase())) return true;
+    setIsNotWord(true);
     return false;
-  }
+  };
 
-  handleKeyPress(e) {
+  const handleKeyPress = (e) => {
     // Add character
     if (e.code.substr(0, 3) === "Key") {
-      this.handleCharacter(e.key);
+      handleCharacter(e.key);
     }
 
     // Delete character
     if (e.key === "Backspace") {
-      this.handleDelete();
+      handleDelete();
     }
 
     // Submit entry
     if (e.key === "Enter") {
-      this.handleSubmit();
+      handleSubmit();
     }
-  }
+  };
 
-  handleDelete() {
-    if (this.state.current.length < 0) return;
-    this.setState({
-      current: this.state.current.slice(0, -1),
-    });
-  }
+  const handleDelete = () => {
+    if (currentGuess.length < 0) return;
+    setCurrentGuess(currentGuess.slice(0, -1));
+  };
 
-  handleSubmit() {
-    if (this.state.current.length < 5) return;
-    this.checkGuess();
-  }
+  const handleCharacter = (char) => {
+    if (currentGuess.length > 4 || isGameLost || isGameWon) return;
+    setCurrentGuess(currentGuess + char.toUpperCase());
+  };
 
-  handleCharacter(char) {
-    if (
-      this.state.current.length > 4 ||
-      this.state.isGameLost ||
-      this.state.isGameWon
-    )
-      return;
-    this.setState({
-      current: this.state.current + char.toUpperCase(),
-    });
-  }
-
-  checkGuess() {
-    // Check if guess is a valid word.
-    if (!this.isValidGuess()) return;
+  const handleSubmit = () => {
+    // Check if guess is valid.
+    if (currentGuess.length < 5 || !isValidGuess()) return;
 
     // Get letters as array.
-    let guess = this.state.current.split("");
-    let hiddenWord = this.state.hiddenWord.split("");
+    let guessArray = currentGuess.split("");
+    let hiddenWordArray = hiddenWord.split("");
+
+    // Clear current guess.
+    setCurrentGuess("");
 
     // Check exact matches.
     let current = [];
-    guess.forEach((letter, i) => {
+    guessArray.forEach((letter, i) => {
       current[i] = {};
       current[i].letter = letter;
-      if (hiddenWord[i] === letter) {
+      if (hiddenWordArray[i] === letter) {
         current[i].status = 2;
-        hiddenWord[i] = null;
-        guess[i] = null;
+        hiddenWordArray[i] = null;
+        guessArray[i] = null;
       }
     });
 
-    // Check if answer is correct.
-    if (this.isCorrect()) {
-      return this.setState(
-        {
-          guesses: [...this.state.guesses, current],
-          current: "",
-        },
-        () =>
-          setTimeout(() => {
-            this.setState({
-              isGameWon: true,
-            });
-          }, 500)
-      );
-    }
-
     // Clean empty values.
-    hiddenWord = removeEmpty(hiddenWord);
+    hiddenWordArray = removeEmpty(hiddenWordArray);
 
     // Check remaining letters for presence.
-    guess.forEach((letter, i) => {
+    guessArray.forEach((letter, i) => {
       if (letter === null) return;
-      let index = hiddenWord.indexOf(letter);
+      let index = hiddenWordArray.indexOf(letter);
       if (index >= 0) {
         current[i].status = 1;
-        hiddenWord[index] = null;
+        hiddenWordArray[index] = null;
       } else {
         current[i].status = 0;
       }
     });
 
     // Save result to state.
-    this.setState(
-      {
-        guesses: [...this.state.guesses, current],
-        current: "",
-      },
-      () => {
-        if (this.state.guesses.length > 5) {
-          setTimeout(() => {
-            this.setState({
-              isGameLost: true,
-            });
-          }, 500);
-        }
-      }
-    );
-  }
+    setGuesses([...guesses, current]);
+  };
 
-  isCorrect() {
-    return this.state.current === this.state.hiddenWord;
-  }
+  const reset = () => {
+    setIsGameWon(false);
+    setIsGameLost(false);
+    setHiddenWord(getHiddenWord());
+    setGuesses([]);
+    setCurrentGuess("");
+  };
 
-  reset() {
-    this.setState({
-      isGameWon: false,
-      isGameLost: false,
-      hiddenWord: this.getHiddenWord(),
-      guesses: [],
-      current: "",
-    });
-  }
-
-  render() {
-    return (
-      <div className="flex flex-col items-center justify-between h-full max-w-[600px] mx-auto my-0">
-        <h1 className="text-3xl font-bold my-5">Warbler</h1>
-        <Grid current={this.state.current} guesses={this.state.guesses} />
-        <Keyboard
-          handleSubmit={this.handleSubmit}
-          handleDelete={this.handleDelete}
-          handleCharacter={this.handleCharacter}
+  return (
+    <div className="flex flex-col items-center justify-between h-full max-w-[600px] mx-auto my-0">
+      <h1 className="text-3xl font-bold my-5">Warbler</h1>
+      <Grid current={currentGuess} guesses={guesses} />
+      <Keyboard
+        handleSubmit={handleSubmit}
+        handleDelete={handleDelete}
+        handleCharacter={handleCharacter}
+      />
+      {isNotWord && (
+        <Modal
+          header="Not a word"
+          body={
+            <>
+              <strong>"{currentGuess}"</strong>
+              <span> is not a word!</span>
+            </>
+          }
+          buttonLabel={"OK"}
+          onClickButton={() => setIsNotWord(false)}
         />
-        {this.state.isNotWord && (
-          <Modal
-            header="Not a word"
-            body={
-              <>
-                <strong>"{this.state.current}"</strong>
-                <span> is not a word!</span>
-              </>
-            }
-            buttonLabel={"OK"}
-            onClickButton={() => this.setState({ isNotWord: false })}
-          />
-        )}
-        {this.state.isGameLost && (
-          <Modal
-            header="Game over"
-            body={
-              <>
-                <span>The hidden word was: </span>
-                <strong>{this.state.hiddenWord}</strong>
-              </>
-            }
-            buttonLabel={"Try again"}
-            onClickButton={this.reset}
-          />
-        )}
-        {this.state.isGameWon && (
-          <Modal
-            header="You Win!"
-            body={
-              <>
-                <span>Number of tries: </span>
-                {this.state.guesses.length}
-              </>
-            }
-            buttonLabel={"New game"}
-            onClickButton={this.reset}
-          />
-        )}
-      </div>
-    );
-  }
+      )}
+      {isGameLost && (
+        <Modal
+          header="Game over"
+          body={
+            <>
+              <span>The hidden word was: </span>
+              <strong>{hiddenWord}</strong>
+            </>
+          }
+          buttonLabel={"Try again"}
+          onClickButton={reset}
+        />
+      )}
+      {isGameWon && (
+        <Modal
+          header="You win!"
+          body={
+            <>
+              <span>Number of tries: </span>
+              {guesses.length}
+            </>
+          }
+          buttonLabel={"New game"}
+          onClickButton={reset}
+        />
+      )}
+    </div>
+  );
 }
 
 export default App;

@@ -8,9 +8,10 @@ const Tile = ({letter, status, selected}) => {
     useEffect(() => {
         if(letter && status === undefined) {
             setAnimate(true)
-            setTimeout(() => {
+            const timer = setTimeout(() => {
                 setAnimate(false)
             }, 200)
+            return () => clearTimeout(timer)
         }
     }, [letter, status])
 
@@ -25,7 +26,7 @@ const Tile = ({letter, status, selected}) => {
                 "relative border border-gray-300 border-solid pt-[100%] w-full h-full shadow-md"
             )}>
             <div className="absolute inset-1/2 flex justify-center items-center">
-                <p className='font-bold text-sm sm:text-xl'>{letter}</p>
+                <p className='font-bold text-2xl'>{letter}</p>
             </div>
         </div>
     )

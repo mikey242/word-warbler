@@ -13,7 +13,7 @@ const Grid = ({ current, guesses }) => {
         <Row key={i} letters={guess} />
       ))}
       {/* Current guess */}
-      {guesses.length < 6 && <CurrentRow letters={current.split("")} />}
+      {guesses.length < 6 && <CurrentRow letters={current?.split("")} />}
       {/* Remaining blank rows */}
       {blanks.map((_, i) => (
         <Row key={i} />
