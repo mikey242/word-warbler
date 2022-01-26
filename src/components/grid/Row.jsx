@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
+import { TIMING } from "../../constants/settings";
 import { Tile } from "./Tile";
 
 const Row = ({ letters = [] }) => {
   const [animate, setAnimate] = useState(false);
-  const [animateRow, setAnimateRow] = useState(0)
+  const [status, setStatus] = useState();
 
   useEffect(() => {
     const len = letters.length;
@@ -11,8 +12,8 @@ const Row = ({ letters = [] }) => {
       setAnimate(true);
       for (let i = 0; i <= len; i++) {
         setTimeout(() => {
-          setAnimateRow(i)
-        },( i * 100) + 100);
+          setStatus(i);
+        }, (i * (TIMING * 100)) + (TIMING * 100) / 2);
       }
     }
   }, [letters]);
@@ -23,11 +24,14 @@ const Row = ({ letters = [] }) => {
         letters.map((entry, i) => (
           <div
             style={{
-              animation: animate && "rotate 200ms ease-in " + (i * 1) + "00ms",
+              animation: animate && "rotate " + (TIMING * 100) + "ms linear " + i * (TIMING) + "00ms",
             }}
             key={i}
           >
-            <Tile status={(animateRow >= i) && entry.status} letter={entry.letter} />
+            <Tile
+              status={status >= i && entry.status}
+              letter={entry.letter}
+            />
           </div>
         ))
       ) : (

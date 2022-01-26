@@ -1,19 +1,24 @@
 import { useState } from "react";
+import { useEffect } from "react/cjs/react.development";
 import { Modal } from "./Modal";
 
 const Bar = () => {
   const [showHelp, setShowHelp] = useState(false);
   const [darkMode, setDarkMode] = useState(false);
 
-  const toggleDarkMode = () => {
-    const root = document.documentElement;
-    if (root.classList.contains("dark")) {
-      root.classList.remove("dark");
-      setDarkMode(false);
-    } else {
-      root.classList.add("dark");
+  useEffect(() => {
+    if (document.documentElement.classList.contains("dark")) {
       setDarkMode(true);
+    } else {
+      setDarkMode(false);
     }
+  }, [])
+
+  const toggleDarkMode = () => {
+    const current = localStorage.theme
+    localStorage.theme = current === "dark" ? "light" : "dark"
+    document.documentElement.classList.toggle("dark")
+    setDarkMode(!darkMode)
   };
 
   return (

@@ -7,6 +7,7 @@ import { Keyboard } from "./components/keyboard/Keyboard";
 import { Modal } from "./components/Modal";
 import { Bar } from "./components/Bar";
 import { useTranslation } from "react-i18next";
+import { TIMING } from "./constants/settings";
 
 function App() {
   const { t } = useTranslation();
@@ -18,9 +19,6 @@ function App() {
   const [currentGuess, setCurrentGuess] = useState("");
 
   useEffect(() => {
-    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-      document.documentElement.classList.add('dark')
-    }
     setHiddenWord(getHiddenWord());
   }, []);
 
@@ -39,13 +37,13 @@ function App() {
     if (latest === hiddenWord) {
       return setTimeout(() => {
         setIsGameWon(true);
-      }, 1000);
+      }, (TIMING * 100 * 5));
     }
 
     if (guesses.length > 5) {
       return setTimeout(() => {
         setIsGameLost(true);
-      }, 1000);
+      }, (TIMING * 100 * 5));
     }
   }, [guesses, hiddenWord]);
 
@@ -91,6 +89,7 @@ function App() {
   };
 
   const handleSubmit = () => {
+    console.log(hiddenWord)
     // Check if guess is valid.
     if (!rowComplete() || !isWord()) return;
 
