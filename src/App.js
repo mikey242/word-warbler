@@ -1,5 +1,6 @@
 import "./App.css";
-import { WORDS } from "./constants/words.en";
+import i18n from "i18next";
+import { WORDS } from "./constants/words";
 import { Grid } from "./components/grid/Grid";
 import { useEffect, useState } from "react";
 import { removeEmpty } from "./util/helpers";
@@ -11,6 +12,7 @@ import { TIMING } from "./constants/settings";
 
 function App() {
   const { t } = useTranslation();
+  const [wordList, setWordList] = useState([]);
   const [isGameWon, setIsGameWon] = useState(false);
   const [isGameLost, setIsGameLost] = useState(false);
   const [isNotWord, setIsNotWord] = useState(false);
@@ -19,13 +21,21 @@ function App() {
   const [currentGuess, setCurrentGuess] = useState("");
 
   useEffect(() => {
-    setHiddenWord(getHiddenWord());
-  }, []);
-
-  useEffect(() => {
+    i18n.on("languageChanged", (lng) => {
+      setWordList(WORDS[lng.substring(0, 2)]);
+    });
     window.addEventListener("keydown", handleKeyPress);
     return () => window.removeEventListener("keydown", handleKeyPress);
   });
+
+  useEffect(() => {
+    if (wordList.length && !isGameWon && !isGameLost) {
+      const word =
+        wordList[Math.floor(Math.random() * wordList.length)].toUpperCase();
+      setHiddenWord(word);
+      console.log(word, i18n.language);
+    }
+  }, [wordList, isGameLost, isGameWon]);
 
   useEffect(() => {
     const latest = guesses
@@ -37,22 +47,18 @@ function App() {
     if (latest === hiddenWord) {
       return setTimeout(() => {
         setIsGameWon(true);
-      }, (TIMING * 100 * 5));
+      }, TIMING * 100 * 5);
     }
 
     if (guesses.length > 5) {
       return setTimeout(() => {
         setIsGameLost(true);
-      }, (TIMING * 100 * 5));
+      }, TIMING * 100 * 5);
     }
   }, [guesses, hiddenWord]);
 
-  const getHiddenWord = () => {
-    return WORDS[Math.floor(Math.random() * WORDS.length)].toUpperCase();
-  };
-
   const isWord = () => {
-    if (WORDS.includes(currentGuess.toLowerCase())) return true;
+    if (wordList.includes(currentGuess.toLowerCase())) return true;
     setIsNotWord(true);
     return false;
   };
@@ -89,7 +95,6 @@ function App() {
   };
 
   const handleSubmit = () => {
-    console.log(hiddenWord)
     // Check if guess is valid.
     if (!rowComplete() || !isWord()) return;
 
@@ -134,14 +139,13 @@ function App() {
   const reset = () => {
     setIsGameWon(false);
     setIsGameLost(false);
-    setHiddenWord(getHiddenWord());
     setGuesses([]);
     setCurrentGuess("");
   };
 
   return (
     <div className="flex flex-col items-center justify-between h-full max-w-[600px] mx-auto my-0">
-      <Bar />
+      <Bar reset={reset} />
       <Grid current={currentGuess} guesses={guesses} />
       <Keyboard
         handleSubmit={handleSubmit}
@@ -179,7 +183,9 @@ function App() {
           header={t("You win!")}
           body={
             <p>
-              <span>{t("The hidden word was: ")}</span><strong>{hiddenWord}</strong><br/>
+              <span>{t("The hidden word was: ")}</span>
+              <strong>{hiddenWord}</strong>
+              <br />
               <span>{t("Number of tries: ")}</span>
               {guesses.length}
             </p>

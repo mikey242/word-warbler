@@ -1,9 +1,12 @@
+import i18n from "i18next";
 import { useState } from "react";
 import { useEffect } from "react/cjs/react.development";
 import { Modal } from "./Modal";
+import classNames from 'classnames'
 
-const Bar = () => {
+const Bar = ({ reset }) => {
   const [showHelp, setShowHelp] = useState(false);
+  const [showLanguage, setShowLanguage] = useState(false);
   const [darkMode, setDarkMode] = useState(false);
 
   useEffect(() => {
@@ -12,38 +15,27 @@ const Bar = () => {
     } else {
       setDarkMode(false);
     }
-  }, [])
+  }, []);
 
   const toggleDarkMode = () => {
-    const current = localStorage.theme
-    localStorage.theme = current === "dark" ? "light" : "dark"
-    document.documentElement.classList.toggle("dark")
-    setDarkMode(!darkMode)
+    const current = localStorage.theme;
+    localStorage.theme = current === "dark" ? "light" : "dark";
+    document.documentElement.classList.toggle("dark");
+    setDarkMode(!darkMode);
+  };
+
+  const changeLanguage = (lang) => {
+    i18n.changeLanguage(lang);
+    reset();
+    setShowLanguage(false)
   };
 
   return (
     <>
-      {showHelp && (
-        <Modal
-          header="How to play"
-          body={
-            <>
-              <p>
-                Your goal is to guess the <strong>5</strong> letter hidden word
-              </p>
-              <p>
-                <span>The hidden word was: </span>
-              </p>
-            </>
-          }
-          buttonLabel={"Got it!"}
-          onClickButton={() => setShowHelp(false)}
-        />
-      )}
       <nav className="border-gray-300 dark:border-gray-600 border-b text-gray-600 dark:text-gray-300 mb-5 px-4 sm:px-4 py-2.5 w-full">
-        <div className="container flex flex-wrap justify-between items-center mx-auto">
-          <div>
-            <button href="#" onClick={() => setShowHelp(true)}>
+        <div className="container flex flex-wrap justify-center items-center mx-auto">
+          <div className="mr-auto flex-1">
+            <button onClick={() => setShowHelp(true)}>
               <svg
                 className="w-5 h-5"
                 xmlns="http://www.w3.org/2000/svg"
@@ -57,11 +49,11 @@ const Bar = () => {
             </button>
           </div>
           <h1 className="block py-2 px-3 text-xl">Warbler</h1>
-          <div>
+          <div className="ml-auto flex-1 text-right">
             <button onClick={toggleDarkMode}>
               {darkMode ? (
                 <svg
-                  className="inline mr-2 w-5 h-5"
+                  className="inline mr-3 w-5 h-5"
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 512 512"
                 >
@@ -83,9 +75,9 @@ const Bar = () => {
                 </svg>
               )}
             </button>
-            <button>
+            <button onClick={() => setShowLanguage(true)}>
               <svg
-                className="inline w-5 h-5"
+                className="inline w-5"
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 496 512"
               >
@@ -98,6 +90,39 @@ const Bar = () => {
           </div>
         </div>
       </nav>
+      {showHelp && (
+        <Modal
+          header="How to play"
+          body={
+            <>
+              <p>
+                Your goal is to guess the <strong>5</strong> letter hidden word
+              </p>
+              <p>
+                <span>The hidden word was: </span>
+              </p>
+            </>
+          }
+          buttonLabel={"Got it!"}
+          onClickButton={() => setShowHelp(false)}
+        />
+      )}
+      {showLanguage && (
+        <Modal
+          header="Language"
+          body={
+            <div className="grid gap-2">
+              <button className={classNames(i18n.language === "nl-NL" && "border", "border-gray-600 p-2")} onClick={() => changeLanguage("nl-NL")}>
+                Dutch
+              </button><br/>
+              <button className={classNames(i18n.language === "en-EN" && "border", "border-gray-600 p-2")} onClick={() => changeLanguage("en-EN")}>
+                English
+              </button>
+            </div>
+          }
+          onClickButton={() => setShowHelp(false)}
+        />
+      )}
     </>
   );
 };
