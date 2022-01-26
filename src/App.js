@@ -1,12 +1,15 @@
 import "./App.css";
-import { WORDS } from "./constants/words";
+import { WORDS } from "./constants/words.en";
 import { Grid } from "./components/grid/Grid";
 import { useEffect, useState } from "react";
 import { removeEmpty } from "./util/helpers";
 import { Keyboard } from "./components/keyboard/Keyboard";
 import { Modal } from "./components/Modal";
+import { Bar } from "./components/Bar";
+import { useTranslation } from "react-i18next";
 
 function App() {
+  const { t } = useTranslation();
   const [isGameWon, setIsGameWon] = useState(false);
   const [isGameLost, setIsGameLost] = useState(false);
   const [isNotWord, setIsNotWord] = useState(false);
@@ -47,10 +50,14 @@ function App() {
     return WORDS[Math.floor(Math.random() * WORDS.length)].toUpperCase();
   };
 
-  const isValidGuess = () => {
+  const isWord = () => {
     if (WORDS.includes(currentGuess.toLowerCase())) return true;
     setIsNotWord(true);
     return false;
+  };
+
+  const rowComplete = () => {
+    return currentGuess.length > 4;
   };
 
   const handleKeyPress = (e) => {
@@ -76,13 +83,13 @@ function App() {
   };
 
   const handleCharacter = (char) => {
-    if (currentGuess.length > 4 || isGameLost || isGameWon) return;
+    if (rowComplete() || isGameLost || isGameWon) return;
     setCurrentGuess(currentGuess + char.toUpperCase());
   };
 
   const handleSubmit = () => {
     // Check if guess is valid.
-    if (currentGuess.length < 5 || !isValidGuess()) return;
+    if (!rowComplete() || !isWord()) return;
 
     // Get letters as array.
     let guessArray = currentGuess.split("");
@@ -132,7 +139,7 @@ function App() {
 
   return (
     <div className="flex flex-col items-center justify-between h-full max-w-[600px] mx-auto my-0">
-      <h1 className="text-3xl font-bold my-5">Warbler</h1>
+      <Bar />
       <Grid current={currentGuess} guesses={guesses} />
       <Keyboard
         handleSubmit={handleSubmit}
@@ -141,40 +148,41 @@ function App() {
       />
       {isNotWord && (
         <Modal
-          header="Not a word"
+          header={t("Not a word")}
           body={
-            <>
-              <strong>"{currentGuess}"</strong>
-              <span> is not a word!</span>
-            </>
+            <p>
+              <strong>"{currentGuess}" </strong>
+              <span>{t("is not a word!")}</span>
+            </p>
           }
-          buttonLabel={"OK"}
+          buttonLabel={t("OK")}
           onClickButton={() => setIsNotWord(false)}
         />
       )}
       {isGameLost && (
         <Modal
-          header="Game over"
+          header={t("Game over")}
           body={
-            <>
-              <span>The hidden word was: </span>
+            <p>
+              <span>{t("The hidden word was: ")}</span>
               <strong>{hiddenWord}</strong>
-            </>
+            </p>
           }
-          buttonLabel={"Try again"}
+          buttonLabel={t("Try again")}
           onClickButton={reset}
         />
       )}
       {isGameWon && (
         <Modal
-          header="You win!"
+          header={t("You win!")}
           body={
-            <>
-              <span>Number of tries: </span>
+            <p>
+              <span>{t("The hidden word was: ")}</span><strong>{hiddenWord}</strong><br/>
+              <span>{t("Number of tries: ")}</span>
               {guesses.length}
-            </>
+            </p>
           }
-          buttonLabel={"New game"}
+          buttonLabel={t("New game")}
           onClickButton={reset}
         />
       )}
