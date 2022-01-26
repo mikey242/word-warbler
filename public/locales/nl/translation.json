@@ -1,11 +1,11 @@
 {
-    "Not a word": "Geen word",
-    "is not a word!": "is geen word!",
-    "OK": "OK",
-    "Game over": "Game over",
-    "The hidden word was: ": "The hidden word was: ",
-    "Try again": "Try again",
-    "You win!": "You win!",
-    "New game": "New game",
-    "Number of tries: ": "Number of tries: "
-  }
+  "Game over": "Spel is over",
+  "is not a word!": "is geen woord!",
+  "New game": "Nieuw spel",
+  "Not a word": "Geen woord",
+  "Number of tries: ": "Aantal pogingen:",
+  "OK": "OK",
+  "The hidden word was: ": "Het verborgen woord was:",
+  "Try again": "Probeer opnieuw",
+  "You win!": "Jij wint!"
+}
