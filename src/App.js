@@ -18,6 +18,9 @@ function App() {
   const [currentGuess, setCurrentGuess] = useState("");
 
   useEffect(() => {
+    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+      document.documentElement.classList.add('dark')
+    }
     setHiddenWord(getHiddenWord());
   }, []);
 

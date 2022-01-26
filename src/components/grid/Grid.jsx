@@ -7,7 +7,7 @@ const Grid = ({ current, guesses }) => {
     guesses.length < 5 ? Array.from(Array(5 - guesses.length)) : [];
 
   return (
-    <div id="grid" className="grid grid-rows-4 gap-3 px-3 max-w-md mx-auto w-full text-center">
+    <div id="grid" className="grid grid-rows-4 gap-2 px-3 max-w-md mx-auto w-full text-center">
       {/* Previously guessed */}
       {guesses.map((guess, i) => (
         <Row key={i} letters={guess} />

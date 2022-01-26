@@ -1,5 +1,6 @@
 module.exports = {
   content: ["./src/**/*.{html,js,jsx}"],
+  darkMode: 'class',
   theme: {
     extend: {
       animation: { press: "press 200ms ease-in-out" },

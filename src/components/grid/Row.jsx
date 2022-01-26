@@ -18,7 +18,7 @@ const Row = ({ letters = [] }) => {
   }, [letters]);
 
   return (
-    <div className="grid grid-cols-5 gap-3">
+    <div className="grid grid-cols-5 gap-2">
       {letters.length ? (
         letters.map((entry, i) => (
           <div
