@@ -1,6 +1,5 @@
 import i18n from "i18next";
-import { useState } from "react";
-import { useEffect } from "react/cjs/react.development";
+import { useState, useEffect } from "react";
 import { Modal } from "./Modal";
 import classNames from 'classnames'
 
@@ -112,10 +111,10 @@ const Bar = ({ reset }) => {
           header="Language"
           body={
             <div className="grid gap-2">
-              <button className={classNames(i18n.language === "nl-NL" && "border", "border-gray-600 p-2")} onClick={() => changeLanguage("nl-NL")}>
+              <button className={classNames(i18n.language === "nl" && "border", "border-gray-600 p-2")} onClick={() => changeLanguage("nl")}>
                 Dutch
               </button><br/>
-              <button className={classNames(i18n.language === "en-EN" && "border", "border-gray-600 p-2")} onClick={() => changeLanguage("en-EN")}>
+              <button className={classNames(i18n.language === "en" && "border", "border-gray-600 p-2")} onClick={() => changeLanguage("en")}>
                 English
               </button>
             </div>

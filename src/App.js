@@ -9,6 +9,7 @@ import { Modal } from "./components/Modal";
 import { Bar } from "./components/Bar";
 import { useTranslation } from "react-i18next";
 import { TIMING } from "./constants/settings";
+import { Notification } from "./components/Notification";
 
 function App() {
   const { t } = useTranslation();
@@ -19,6 +20,16 @@ function App() {
   const [guesses, setGuesses] = useState([]);
   const [hiddenWord, setHiddenWord] = useState("");
   const [currentGuess, setCurrentGuess] = useState("");
+  const [stats, setStats] = useState(
+    JSON.parse(localStorage.getItem("stats")) ?? {
+      1: 0,
+      2: 0,
+      3: 0,
+      4: 0,
+      5: 0,
+      6: 0,
+    }
+  );
 
   useEffect(() => {
     i18n.on("languageChanged", (lng) => {
@@ -38,6 +49,10 @@ function App() {
   }, [wordList, isGameLost, isGameWon]);
 
   useEffect(() => {
+    localStorage.setItem("stats", JSON.stringify(stats));
+  }, [stats]);
+
+  useEffect(() => {
     const latest = guesses
       .at(-1)
       ?.map((item) => {
@@ -45,6 +60,11 @@ function App() {
       })
       .join("");
     if (latest === hiddenWord) {
+      setStats((prev) => ({
+        ...prev,
+        [guesses.length]: prev[guesses.length]++,
+      }));
+
       return setTimeout(() => {
         setIsGameWon(true);
       }, TIMING * 100 * 5);
@@ -60,6 +80,9 @@ function App() {
   const isWord = () => {
     if (wordList.includes(currentGuess.toLowerCase())) return true;
     setIsNotWord(true);
+    setTimeout(() => {
+      setIsNotWord(false);
+    }, 1000);
     return false;
   };
 
@@ -147,24 +170,14 @@ function App() {
     <div className="flex flex-col items-center justify-between h-full max-w-[600px] mx-auto my-0">
       <Bar reset={reset} />
       <Grid current={currentGuess} guesses={guesses} />
+      <div className="relative">
+        {isNotWord && <Notification message={t("Word not in list")} />}
+      </div>
       <Keyboard
         handleSubmit={handleSubmit}
         handleDelete={handleDelete}
         handleCharacter={handleCharacter}
       />
-      {isNotWord && (
-        <Modal
-          header={t("Not a word")}
-          body={
-            <p>
-              <strong>"{currentGuess}" </strong>
-              <span>{t("is not a word!")}</span>
-            </p>
-          }
-          buttonLabel={t("OK")}
-          onClickButton={() => setIsNotWord(false)}
-        />
-      )}
       {isGameLost && (
         <Modal
           header={t("Game over")}
@@ -182,13 +195,33 @@ function App() {
         <Modal
           header={t("You win!")}
           body={
-            <p>
-              <span>{t("The hidden word was: ")}</span>
-              <strong>{hiddenWord}</strong>
-              <br />
-              <span>{t("Number of tries: ")}</span>
-              {guesses.length}
-            </p>
+            <>
+              <p>
+                <span>{t("The hidden word was: ")}</span>
+                <strong>{hiddenWord}</strong>
+              </p>
+              <p>
+                <span>{t("Number of tries: ")}</span>
+                {guesses.length}
+              </p>
+              <div className="mt-5">
+              {Object.entries(stats).map(([key, value]) => (
+                <div key={key} className="flex h-3 mb-3 font-mono items-center">
+                  <div className="mr-2 font-bold">{key}</div>
+                  <div
+                    style={{
+                      flexBasis:
+                        (value / Object.values(stats).reduce((a, b) => a + b)) *
+                          100 +
+                        "%",
+                    }}
+                    className="h-full bg-green-500 dark:bg-purple-600 mr-auto"
+                  ></div>
+                  <div className="ml-2 text-xs">{value}</div>
+                </div>
+              ))}
+              </div>
+            </>
           }
           buttonLabel={t("New game")}
           onClickButton={reset}

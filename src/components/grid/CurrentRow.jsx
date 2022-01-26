@@ -5,7 +5,7 @@ const CurrentRow = ({letters = []}) => {
     const merged = [...letters, ...blanks]
 
     return (
-        <div className="grid grid-cols-5 gap-3">
+        <div className="grid grid-cols-5 gap-2">
             {merged.map((item,i) => (
                 <Tile
                     key={i}
