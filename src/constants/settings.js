@@ -1,1 +1,2 @@
-export const TIMING = 2
+/* eslint-disable import/prefer-default-export */
+export const TIMING = 2;

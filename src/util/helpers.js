@@ -1,3 +1,5 @@
+/* eslint-disable no-restricted-syntax */
+/* eslint-disable import/prefer-default-export */
 /**
 * Removes empty elements from array.
 *
@@ -5,9 +7,10 @@
 * @return {array} new arra.
 */
 export function removeEmpty(array) {
- let result = []
- for(let i of array) {
-   i && result.push(i)
- }
- return result
+  const result = [];
+  for (const i of array) {
+    // eslint-disable-next-line no-unused-expressions
+    i && result.push(i);
+  }
+  return result;
 }

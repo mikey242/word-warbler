@@ -1,21 +1,25 @@
-import { useEffect, useState } from "react";
-import { TIMING } from "../../constants/settings";
-import { Tile } from "./Tile";
+/* eslint-disable react/forbid-prop-types */
+import { useEffect, useState, React } from 'react';
+import PropTypes from 'prop-types';
+import { TIMING } from '../../constants/settings';
+import Tile from './Tile';
 
-const Row = ({ letters = [] }) => {
+function Row({ letters = [] }) {
   const [animate, setAnimate] = useState(false);
   const [status, setStatus] = useState();
 
   useEffect(() => {
+    let timer = null;
     const len = letters.length;
     if (len === 5) {
       setAnimate(true);
-      for (let i = 0; i <= len; i++) {
-        setTimeout(() => {
+      for (let i = 0; i <= len; i += 1) {
+        timer = setTimeout(() => {
           setStatus(i);
         }, (i * (TIMING * 100)) + (TIMING * 100) / 2);
       }
     }
+    return clearTimeout(timer);
   }, [letters]);
 
   return (
@@ -24,12 +28,13 @@ const Row = ({ letters = [] }) => {
         letters.map((entry, i) => (
           <div
             style={{
-              animation: animate && "rotate " + (TIMING * 100) + "ms linear " + i * (TIMING) + "00ms",
+              animation: animate && `rotate ${TIMING * 100}ms linear ${i * (TIMING)}00ms`,
             }}
+            // eslint-disable-next-line react/no-array-index-key
             key={i}
           >
             <Tile
-              status={status >= i && entry.status}
+              status={status >= i ? Number(entry.status) : null}
               letter={entry.letter}
             />
           </div>
@@ -45,6 +50,14 @@ const Row = ({ letters = [] }) => {
       )}
     </div>
   );
+}
+
+Row.propTypes = {
+  letters: PropTypes.array,
 };
 
-export { Row };
+Row.defaultProps = {
+  letters: [],
+};
+
+export default Row;

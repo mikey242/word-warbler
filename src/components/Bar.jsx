@@ -1,17 +1,17 @@
-import i18n from "i18next";
-import { useState, useEffect } from "react";
-import { Modal } from "./Modal";
-import classNames from "classnames";
-import { useTranslation } from "react-i18next";
+import i18n from 'i18next';
+import { React, useState, useEffect } from 'react';
+import classNames from 'classnames';
+import { useTranslation } from 'react-i18next';
+import PropTypes from 'prop-types';
+import Modal from './Modal';
 
-const Bar = ({ reset }) => {
+function Bar({ changeLanguage, setShowIntro }) {
   const { t } = useTranslation();
-  const [showHelp, setShowHelp] = useState(false);
   const [showLanguage, setShowLanguage] = useState(false);
   const [darkMode, setDarkMode] = useState(false);
 
   useEffect(() => {
-    if (document.documentElement.classList.contains("dark")) {
+    if (document.documentElement.classList.contains('dark')) {
       setDarkMode(true);
     } else {
       setDarkMode(false);
@@ -20,14 +20,13 @@ const Bar = ({ reset }) => {
 
   const toggleDarkMode = () => {
     const current = localStorage.theme;
-    localStorage.theme = current === "dark" ? "light" : "dark";
-    document.documentElement.classList.toggle("dark");
+    localStorage.theme = current === 'dark' ? 'light' : 'dark';
+    document.documentElement.classList.toggle('dark');
     setDarkMode(!darkMode);
   };
 
-  const changeLanguage = (lang) => {
-    i18n.changeLanguage(lang);
-    reset();
+  const toggleLanguage = (lang) => {
+    changeLanguage(lang);
     setShowLanguage(false);
   };
 
@@ -36,7 +35,7 @@ const Bar = ({ reset }) => {
       <nav className="border-gray-300 dark:border-gray-600 border-b text-gray-600 dark:text-gray-300 mb-5 px-4 sm:px-4 py-2.5 w-full">
         <div className="container flex flex-wrap justify-center items-center mx-auto">
           <div className="mr-auto flex-1">
-            <button onClick={() => setShowHelp(true)}>
+            <button type="button" onClick={() => setShowIntro(true)}>
               <svg
                 className="w-5 h-5"
                 xmlns="http://www.w3.org/2000/svg"
@@ -51,7 +50,7 @@ const Bar = ({ reset }) => {
           </div>
           <h1 className="block py-2 px-3 text-xl">Warbler</h1>
           <div className="ml-auto flex-1 text-right">
-            <button onClick={toggleDarkMode}>
+            <button type="button" onClick={toggleDarkMode}>
               {darkMode ? (
                 <svg
                   className="inline mr-3 w-5 h-5"
@@ -76,7 +75,7 @@ const Bar = ({ reset }) => {
                 </svg>
               )}
             </button>
-            <button onClick={() => setShowLanguage(true)}>
+            <button type="button" onClick={() => setShowLanguage(true)}>
               <svg
                 className="inline w-5"
                 xmlns="http://www.w3.org/2000/svg"
@@ -91,60 +90,44 @@ const Bar = ({ reset }) => {
           </div>
         </div>
       </nav>
-      {showHelp && (
-        <Modal
-          header={t("How to play")}
-          body={
-            <>
-              <p>
-                {t("Your goal is to guess the 5 letter hidden word.")}
-              </p>
-              <p>
-                {t("You have a total of 6 tries to do this. After each guess the letters will turn either 'gray', 'orange' or 'green'.")}
-              </p>
-              <br/>
-              <ul className="ml-5 list-disc">
-                <li>{t("Gray - letter is not in secret word")}</li>
-                <li>{t("Orange - letter IS in secret word but in another position")}</li>
-                <li>{t("Green - letter is in correct position")}</li>
-              </ul>
-            </>
-          }
-          buttonLabel={t("Got it!")}
-          onClickButton={() => setShowHelp(false)}
-        />
-      )}
       {showLanguage && (
         <Modal
-          header={t("Language")}
-          body={
+          header={t('Language')}
+          body={(
             <div className="grid gap-2">
               <button
+                type="button"
                 className={classNames(
-                  i18n.language === "nl" && "border",
-                  "border-gray-600 p-2"
+                  i18n.language.substring(0, 2) === 'nl' && 'border',
+                  'border-gray-600 p-2',
                 )}
-                onClick={() => changeLanguage("nl")}
+                onClick={() => toggleLanguage('nl')}
               >
-                {t("Dutch")}
+                {t('Dutch')}
               </button>
               <br />
               <button
+                type="button"
                 className={classNames(
-                  i18n.language === "en" && "border",
-                  "border-gray-600 p-2"
+                  i18n.language.substring(0, 2) === 'en' && 'border',
+                  'border-gray-600 p-2',
                 )}
-                onClick={() => changeLanguage("en")}
+                onClick={() => toggleLanguage('en')}
               >
-                {t("English")}
+                {t('English')}
               </button>
             </div>
-          }
-          onClickButton={() => setShowHelp(false)}
+          )}
+          onClickButton={() => setShowLanguage(false)}
         />
       )}
     </>
   );
+}
+
+Bar.propTypes = {
+  changeLanguage: PropTypes.func.isRequired,
+  setShowIntro: PropTypes.func.isRequired,
 };
 
-export { Bar };
+export default Bar;
