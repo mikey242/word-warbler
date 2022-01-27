@@ -1,11 +1,19 @@
 {
+  "Dutch": "Dutch",
+  "English": "English",
   "Game over": "Game over",
-  "is not a word!": "is not a word!",
+  "Got it!": "Got it!",
+  "Gray - letter is not in secret word": "Gray - letter is not in secret word",
+  "Green - letter is in correct position": "Green - letter is in correct position",
+  "How to play": "How to play",
+  "Language": "Language",
   "New game": "New game",
-  "Not a word": "Not a word",
   "Number of tries: ": "Number of tries: ",
-  "OK": "OK",
+  "Orange - letter IS in secret word but in another position": "Orange - letter IS in secret word but in another position",
   "The hidden word was: ": "The hidden word was: ",
   "Try again": "Try again",
-  "You win!": "You win!"
+  "Word not in list": "Word not in list",
+  "You have a total of 6 tries to do this. After each guess the letters will turn either 'gray', 'orange' or 'green'.": "You have a total of 6 tries to do this. After each guess the letters will turn either 'gray', 'orange' or 'green'.",
+  "You win!": "You win!",
+  "Your goal is to guess the 5 letter hidden word.": "Your goal is to guess the 5 letter hidden word."
 }

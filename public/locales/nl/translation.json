@@ -1,11 +1,19 @@
 {
+  "Dutch": "Nederlands",
+  "English": "Engels",
   "Game over": "Spel is over",
-  "is not a word!": "is geen woord!",
+  "Got it!": "Begrepen!",
+  "Gray - letter is not in secret word": "Grijs - letter is niet in geheim woord",
+  "Green - letter is in correct position": "Groen - letter staat op de juiste plaats",
+  "How to play": "Hoe te spelen",
+  "Language": "Taal",
   "New game": "Nieuw spel",
-  "Not a word": "Geen woord",
-  "Number of tries: ": "Aantal pogingen:",
-  "OK": "OK",
+  "Number of tries: ": "Aantal pogingen: ",
+  "Orange - letter IS in secret word but in another position": "Oranje - letter IS in geheim woord maar in een andere positie",
   "The hidden word was: ": "Het verborgen woord was: ",
   "Try again": "Probeer opnieuw",
-  "You win!": "Jij wint!"
+  "Word not in list": "Woord niet in lijst",
+  "You have a total of 6 tries to do this. After each guess the letters will turn either 'gray', 'orange' or 'green'.": "Je hebt hiervoor in totaal 6 pogingen. Na elke gok worden de letters 'grijs', 'oranje' of 'groen'.",
+  "You win!": "Jij wint!",
+  "Your goal is to guess the 5 letter hidden word.": "Je doel is om het verborgen woord van 5 letters te raden."
 }

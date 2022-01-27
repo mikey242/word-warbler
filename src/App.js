@@ -205,21 +205,25 @@ function App() {
                 {guesses.length}
               </p>
               <div className="mt-5">
-              {Object.entries(stats).map(([key, value]) => (
-                <div key={key} className="flex h-3 mb-3 font-mono items-center">
-                  <div className="mr-2 font-bold">{key}</div>
+                {Object.entries(stats).map(([key, value]) => (
                   <div
-                    style={{
-                      flexBasis:
-                        (value / Object.values(stats).reduce((a, b) => a + b)) *
-                          100 +
-                        "%",
-                    }}
-                    className="h-full bg-green-500 dark:bg-purple-600 mr-auto"
-                  ></div>
-                  <div className="ml-2 text-xs">{value}</div>
-                </div>
-              ))}
+                    key={key}
+                    className="flex h-3 mb-3 font-mono items-center"
+                  >
+                    <div className="mr-2 font-bold">{key}</div>
+                    <div
+                      style={{
+                        flexBasis:
+                          (value /
+                            Object.values(stats).reduce((a, b) => a + b)) *
+                            100 +
+                          "%",
+                      }}
+                      className="h-full bg-green-500 dark:bg-purple-600 mr-auto"
+                    ></div>
+                    <div className="ml-2 text-xs">{value}</div>
+                  </div>
+                ))}
               </div>
             </>
           }

@@ -1,9 +1,11 @@
 import i18n from "i18next";
 import { useState, useEffect } from "react";
 import { Modal } from "./Modal";
-import classNames from 'classnames'
+import classNames from "classnames";
+import { useTranslation } from "react-i18next";
 
 const Bar = ({ reset }) => {
+  const { t } = useTranslation();
   const [showHelp, setShowHelp] = useState(false);
   const [showLanguage, setShowLanguage] = useState(false);
   const [darkMode, setDarkMode] = useState(false);
@@ -26,7 +28,7 @@ const Bar = ({ reset }) => {
   const changeLanguage = (lang) => {
     i18n.changeLanguage(lang);
     reset();
-    setShowLanguage(false)
+    setShowLanguage(false);
   };
 
   return (
@@ -63,7 +65,7 @@ const Bar = ({ reset }) => {
                 </svg>
               ) : (
                 <svg
-                  className="inline mr-2 w-5 h-5"
+                  className="inline mr-3 w-5 h-5"
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 512 512"
                 >
@@ -91,31 +93,50 @@ const Bar = ({ reset }) => {
       </nav>
       {showHelp && (
         <Modal
-          header="How to play"
+          header={t("How to play")}
           body={
             <>
               <p>
-                Your goal is to guess the <strong>5</strong> letter hidden word
+                {t("Your goal is to guess the 5 letter hidden word.")}
               </p>
               <p>
-                <span>The hidden word was: </span>
+                {t("You have a total of 6 tries to do this. After each guess the letters will turn either 'gray', 'orange' or 'green'.")}
               </p>
+              <br/>
+              <ul className="ml-5 list-disc">
+                <li>{t("Gray - letter is not in secret word")}</li>
+                <li>{t("Orange - letter IS in secret word but in another position")}</li>
+                <li>{t("Green - letter is in correct position")}</li>
+              </ul>
             </>
           }
-          buttonLabel={"Got it!"}
+          buttonLabel={t("Got it!")}
           onClickButton={() => setShowHelp(false)}
         />
       )}
       {showLanguage && (
         <Modal
-          header="Language"
+          header={t("Language")}
           body={
             <div className="grid gap-2">
-              <button className={classNames(i18n.language === "nl" && "border", "border-gray-600 p-2")} onClick={() => changeLanguage("nl")}>
-                Dutch
-              </button><br/>
-              <button className={classNames(i18n.language === "en" && "border", "border-gray-600 p-2")} onClick={() => changeLanguage("en")}>
-                English
+              <button
+                className={classNames(
+                  i18n.language === "nl" && "border",
+                  "border-gray-600 p-2"
+                )}
+                onClick={() => changeLanguage("nl")}
+              >
+                {t("Dutch")}
+              </button>
+              <br />
+              <button
+                className={classNames(
+                  i18n.language === "en" && "border",
+                  "border-gray-600 p-2"
+                )}
+                onClick={() => changeLanguage("en")}
+              >
+                {t("English")}
               </button>
             </div>
           }
