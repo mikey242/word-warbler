@@ -23,7 +23,7 @@ function Keyboard({ handleCharacter, handleSubmit, handleDelete }) {
           key="enter"
           onClick={handleSubmit}
           character={(
-            <Enter className="rotate-90 w-3 md:w-5" width="1.25rem" />
+            <Enter className="rotate-90 w-3 md:w-5" width="1.25em" />
           )}
         />
 
@@ -34,7 +34,7 @@ function Keyboard({ handleCharacter, handleSubmit, handleDelete }) {
           key="delete"
           onClick={handleDelete}
           character={(
-            <Backspace width="1.25rem" />
+            <Backspace width="1.25em" />
           )}
         />
       </div>

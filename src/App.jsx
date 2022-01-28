@@ -6,7 +6,9 @@ import {
 import { useTranslation } from 'react-i18next';
 import WORDS from './constants/words';
 import Grid from './components/grid/Grid';
-import { getLastWordAsString, isCharacter, removeEmpty } from './util/helpers';
+import {
+  getLastWordAsString, isCharacter, removeEmpty,
+} from './util/helpers';
 import Keyboard from './components/keyboard/Keyboard';
 import Bar from './components/Header';
 import { TIMING } from './constants/settings';
@@ -208,7 +210,10 @@ function App() {
   return (
     <Suspense fallback="loading">
       <div className="flex flex-col items-center justify-between h-full max-w-[600px] mx-auto my-0">
-        <Bar setGameState={setGameState} changeLanguage={changeLanguage} />
+        <Bar
+          setGameState={setGameState}
+          changeLanguage={changeLanguage}
+        />
         <Grid current={gameState.currentGuess} guesses={gameState.guesses} />
         <div className="relative">
           {isNotWord && <Notification message={t('Word not in list')} />}

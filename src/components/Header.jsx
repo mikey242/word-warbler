@@ -5,7 +5,6 @@ import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import Modal from './Modal';
 import useLocalStorage from '../util/storage';
-import { ReactComponent as Share } from '../images/share.svg';
 import { ReactComponent as Language } from '../images/language.svg';
 import { ReactComponent as Light } from '../images/light.svg';
 import { ReactComponent as Dark } from '../images/dark.svg';
@@ -44,23 +43,20 @@ function Bar({ changeLanguage, setGameState }) {
               type="button"
               onClick={() => setGameState((prev) => ({ ...prev, showIntro: true }))}
             >
-              <Help width="1.25rem" />
+              <Help width="1.25em" />
             </button>
           </div>
           <h1 className="block py-2 px-3 text-xl">Word Warbler</h1>
           <div className="ml-auto flex-1 flex justify-end items-center text-right">
             <button type="button" className="mr-2" onClick={toggleTheme}>
               {theme === 'dark' ? (
-                <Dark width="1.25rem" />
+                <Dark width="1.25em" />
               ) : (
-                <Light width="1.25rem" />
+                <Light width="1.25em" />
               )}
             </button>
-            <button type="button" className="mr-2" onClick={() => setShowLanguage(true)}>
-              <Language width="1.25rem" />
-            </button>
-            <button type="button">
-              <Share width="1.25rem" />
+            <button type="button" onClick={() => setShowLanguage(true)}>
+              <Language width="1.25em" />
             </button>
           </div>
         </div>
