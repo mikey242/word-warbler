@@ -4,25 +4,25 @@ import classNames from 'classnames';
 import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import Modal from './Modal';
+import useLocalStorage from '../util/storage';
 
-function Bar({ changeLanguage, setShowIntro }) {
+function Bar({ changeLanguage, setGameState }) {
   const { t } = useTranslation();
   const [showLanguage, setShowLanguage] = useState(false);
-  const [darkMode, setDarkMode] = useState(false);
+  const [theme, setTheme] = useLocalStorage('theme');
 
   useEffect(() => {
     if (document.documentElement.classList.contains('dark')) {
-      setDarkMode(true);
+      setTheme('dark');
     } else {
-      setDarkMode(false);
+      setTheme('light');
     }
   }, []);
 
-  const toggleDarkMode = () => {
-    const current = localStorage.theme;
-    localStorage.theme = current === 'dark' ? 'light' : 'dark';
-    document.documentElement.classList.toggle('dark');
-    setDarkMode(!darkMode);
+  const toggleTheme = () => {
+    const htmlTag = document.documentElement;
+    htmlTag.classList.toggle('dark');
+    setTheme(htmlTag.classList.contains('dark') ? 'dark' : 'light');
   };
 
   const toggleLanguage = (lang) => {
@@ -35,7 +35,10 @@ function Bar({ changeLanguage, setShowIntro }) {
       <nav className="border-gray-300 dark:border-gray-600 border-b text-gray-600 dark:text-gray-300 mb-5 px-4 sm:px-4 py-2.5 w-full">
         <div className="container flex flex-wrap justify-center items-center mx-auto">
           <div className="mr-auto flex-1">
-            <button type="button" onClick={() => setShowIntro(true)}>
+            <button
+              type="button"
+              onClick={() => setGameState((prev) => ({ ...prev, showIntro: true }))}
+            >
               <svg
                 className="w-5 h-5"
                 xmlns="http://www.w3.org/2000/svg"
@@ -48,10 +51,10 @@ function Bar({ changeLanguage, setShowIntro }) {
               </svg>
             </button>
           </div>
-          <h1 className="block py-2 px-3 text-xl">Warbler</h1>
+          <h1 className="block py-2 px-3 text-xl">Word Warbler</h1>
           <div className="ml-auto flex-1 text-right">
-            <button type="button" onClick={toggleDarkMode}>
-              {darkMode ? (
+            <button type="button" onClick={toggleTheme}>
+              {theme === 'dark' ? (
                 <svg
                   className="inline mr-3 w-5 h-5"
                   xmlns="http://www.w3.org/2000/svg"
@@ -127,7 +130,7 @@ function Bar({ changeLanguage, setShowIntro }) {
 
 Bar.propTypes = {
   changeLanguage: PropTypes.func.isRequired,
-  setShowIntro: PropTypes.func.isRequired,
+  setGameState: PropTypes.func.isRequired,
 };
 
 export default Bar;

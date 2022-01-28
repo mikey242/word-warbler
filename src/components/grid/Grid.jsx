@@ -9,7 +9,7 @@ function Grid({ current, guesses }) {
   const blanks = guesses.length < 5 ? Array.from(Array(5 - guesses.length)) : [];
 
   return (
-    <div id="grid" className="grid grid-rows-4 gap-2 px-3 max-w-md mx-auto w-full text-center">
+    <div id="grid" className="grid grid-rows-4 gap-2 px-3 max-w-md mx-auto w-full text-2xl text-center">
       {/* Previously guessed */}
       {guesses.map((guess, i) => (
         // eslint-disable-next-line react/no-array-index-key

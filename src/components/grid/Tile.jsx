@@ -27,11 +27,11 @@ function Tile({ letter, status }) {
         status === 1 && 'bg-orange-400',
         status === 2 && 'bg-green-400',
         animate && 'animate-press',
-        'relative border border-gray-600 dark:border-gray-400 border-solid pt-[100%] w-full h-full',
+        'relative border border-gray-600 dark:border-gray-400 border-solid rounded',
       )}
     >
-      <div className="absolute inset-1/2 flex justify-center items-center">
-        <p className="font-bold text-2xl select-none">{letter}</p>
+      <div className="aspect-square flex justify-center items-center">
+        <p className="font-bold select-none">{letter}</p>
       </div>
     </div>
   );
