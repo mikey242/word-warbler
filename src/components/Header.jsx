@@ -41,22 +41,32 @@ function Bar({ changeLanguage, setGameState }) {
           <div className="mr-auto flex-1">
             <button
               type="button"
+              aria-label={t('Show help')}
               onClick={() => setGameState((prev) => ({ ...prev, showIntro: true }))}
             >
-              <Help width="1.25em" />
+              <Help width="1.5em" />
             </button>
           </div>
           <h1 className="block py-2 px-3 text-xl">Word Warbler</h1>
           <div className="ml-auto flex-1 flex justify-end items-center text-right">
-            <button type="button" className="mr-2" onClick={toggleTheme}>
+            <button
+              type="button"
+              aria-label={t('Toggle dark mode')}
+              className="mr-3"
+              onClick={toggleTheme}
+            >
               {theme === 'dark' ? (
-                <Dark width="1.25em" />
+                <Dark width="1.5em" />
               ) : (
-                <Light width="1.25em" />
+                <Light width="1.5em" />
               )}
             </button>
-            <button type="button" onClick={() => setShowLanguage(true)}>
-              <Language width="1.25em" />
+            <button
+              type="button"
+              aria-label={t('Change language')}
+              onClick={() => setShowLanguage(true)}
+            >
+              <Language width="1.5em" />
             </button>
           </div>
         </div>

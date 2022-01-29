@@ -13,7 +13,7 @@ function WinModal({
     <Modal
       header={t('You win!')}
       body={(
-        <>
+        <div className="text-center">
           <Trans i18nKey="winMessage" count={count}>
             <p>
               You guessed the hidden word
@@ -30,7 +30,7 @@ function WinModal({
           <Stats
             stats={stats}
           />
-        </>
+        </div>
           )}
       buttonLabel={t('New game')}
       onClickButton={reset}

@@ -3,10 +3,13 @@ import { React } from 'react';
 import PropTypes from 'prop-types';
 
 // eslint-disable-next-line react/prop-types
-function Key({ character, status, onClick }) {
+function Key({
+  character, status, label, onClick,
+}) {
   return (
     <button
       type="button"
+      aria-label={label ?? character}
       data-character={character}
       onClick={() => onClick(character)}
       className={
@@ -24,12 +27,15 @@ function Key({ character, status, onClick }) {
 }
 
 Key.propTypes = {
+  character: PropTypes.node.isRequired,
   status: PropTypes.number,
+  label: PropTypes.string,
   onClick: PropTypes.func.isRequired,
 };
 
 Key.defaultProps = {
   status: null,
+  label: '',
 };
 
 export default Key;

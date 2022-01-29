@@ -1,11 +1,13 @@
 import { React } from 'react';
 import PropTypes from 'prop-types';
+import { useTranslation } from 'react-i18next';
 import { TOP, MIDDLE, BOTTOM } from '../../constants/keys';
 import Key from './Key';
 import { ReactComponent as Enter } from '../../images/enter.svg';
 import { ReactComponent as Backspace } from '../../images/backspace.svg';
 
 function Keyboard({ handleCharacter, handleSubmit, handleDelete }) {
+  const { t } = useTranslation();
   return (
     <div id="keyboard" className="font-mono w-full mt-3">
       <div className="keyboard-row flex justify-center">
@@ -21,6 +23,7 @@ function Keyboard({ handleCharacter, handleSubmit, handleDelete }) {
       <div className="keyboard-row flex justify-center">
         <Key
           key="enter"
+          label={t('Enter')}
           onClick={handleSubmit}
           character={(
             <Enter className="rotate-90 w-3 md:w-5" width="1.25em" />
@@ -32,6 +35,7 @@ function Keyboard({ handleCharacter, handleSubmit, handleDelete }) {
         ))}
         <Key
           key="delete"
+          label={t('Backspace')}
           onClick={handleDelete}
           character={(
             <Backspace width="1.25em" />

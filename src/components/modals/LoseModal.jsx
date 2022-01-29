@@ -13,7 +13,7 @@ function LoseModal({
     <Modal
       header={t('Game over')}
       body={(
-        <>
+        <div className="text-center">
           <Trans i18nKey="loseMessage">
             <p>
               The hidden word was
@@ -24,7 +24,7 @@ function LoseModal({
           <Stats
             stats={stats}
           />
-        </>
+        </div>
           )}
       buttonLabel={t('Try again')}
       onClickButton={reset}
