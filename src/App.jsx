@@ -204,6 +204,12 @@ function App() {
     return () => window.removeEventListener('keydown', handleKeyPress);
   }, [handleKeyPress]);
 
+  useEffect(() => {
+    if (wordList) {
+      reset();
+    }
+  }, [wordList]);
+
   return (
     <Suspense fallback="loading">
       <div className="flex flex-col items-center justify-between h-full max-w-[600px] mx-auto my-0">
