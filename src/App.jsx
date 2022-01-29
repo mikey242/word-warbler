@@ -1,7 +1,7 @@
 import './App.css';
 import i18n from 'i18next';
 import {
-  React, Suspense, useEffect, useState,
+  React, Suspense, useEffect, useState, useRef,
 } from 'react';
 import { useTranslation } from 'react-i18next';
 import WORDS from './constants/words';
@@ -43,6 +43,7 @@ function App() {
     gamesWon: 0,
     gamesLost: 0,
   });
+  const errorTimer = useRef();
 
   const getHiddenWord = () => wordList[Math.floor(Math.random() * wordList.length)].toUpperCase();
 
@@ -97,8 +98,9 @@ function App() {
 
   const isWord = () => {
     if (wordList.includes(gameState.currentGuess.toLowerCase())) return true;
+    clearTimeout(errorTimer.current);
     setIsNotWord(true);
-    setTimeout(() => {
+    errorTimer.current = setTimeout(() => {
       setIsNotWord(false);
     }, 1000);
     return false;
@@ -214,7 +216,7 @@ function App() {
           setGameState={setGameState}
           changeLanguage={changeLanguage}
         />
-        <Grid current={gameState.currentGuess} guesses={gameState.guesses} />
+        <Grid isNotWord={isNotWord} current={gameState.currentGuess} guesses={gameState.guesses} />
         <div className="relative">
           {isNotWord && <Notification message={t('Word not in list')} />}
         </div>

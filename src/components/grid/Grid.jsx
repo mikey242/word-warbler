@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import CurrentRow from './CurrentRow';
 import Row from './Row';
 
-function Grid({ current, guesses }) {
+function Grid({ current, guesses, isNotWord }) {
   // Generate blank rows
   const blanks = guesses.length < 5 ? Array.from(Array(5 - guesses.length)) : [];
 
@@ -16,7 +16,7 @@ function Grid({ current, guesses }) {
         <Row key={i} letters={guess} />
       ))}
       {/* Current guess */}
-      {guesses.length < 6 && <CurrentRow letters={current.split('')} />}
+      {guesses.length < 6 && <CurrentRow isNotWord={isNotWord} letters={current.split('')} />}
       {/* Remaining blank rows */}
       {blanks.map((_, i) => (
         // eslint-disable-next-line react/no-array-index-key
@@ -29,11 +29,13 @@ function Grid({ current, guesses }) {
 Grid.propTypes = {
   current: PropTypes.string,
   guesses: PropTypes.array,
+  isNotWord: PropTypes.bool,
 };
 
 Grid.defaultProps = {
   current: '',
   guesses: [],
+  isNotWord: null,
 };
 
 export default Grid;
