@@ -5,6 +5,12 @@ import './i18n';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 
+const urlSearchParams = new URLSearchParams(window.location.search);
+const params = Object.fromEntries(urlSearchParams.entries());
+if (Object.prototype.hasOwnProperty.call(params, 'reset')) {
+  localStorage.clear();
+}
+
 ReactDOM.render(
   <React.StrictMode>
     <App />
