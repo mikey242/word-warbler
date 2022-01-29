@@ -17,6 +17,7 @@ import useLocalStorage from './util/storage';
 import WinModal from './components/modals/WinModal';
 import LoseModal from './components/modals/LoseModal';
 import HelpModal from './components/modals/HelpModal';
+import LanguageModal from './components/modals/LanguageModal';
 
 function App() {
   const { t } = useTranslation();
@@ -26,6 +27,7 @@ function App() {
     hiddenWord: '',
     status: 'new',
     showIntro: true,
+    showLanguage: false,
     guesses: [],
     currentGuess: '',
     isGameLost: false,
@@ -170,7 +172,6 @@ function App() {
   };
 
   const handleKeyPress = (e) => {
-    // if (gameState.status === 'end') return;
     // Add character
     if (isCharacter(e)) {
       handleCharacter(e.key);
@@ -198,12 +199,6 @@ function App() {
     });
   };
 
-  const changeLanguage = (lang) => {
-    i18n.changeLanguage(lang, () => {
-      reset();
-    });
-  };
-
   useEffect(() => {
     window.addEventListener('keydown', handleKeyPress);
     return () => window.removeEventListener('keydown', handleKeyPress);
@@ -214,7 +209,6 @@ function App() {
       <div className="flex flex-col items-center justify-between h-full max-w-[600px] mx-auto my-0">
         <Bar
           setGameState={setGameState}
-          changeLanguage={changeLanguage}
         />
         <Grid isNotWord={isNotWord} current={gameState.currentGuess} guesses={gameState.guesses} />
         <div className="relative">
@@ -245,6 +239,12 @@ function App() {
             reset={reset}
           />
         )}
+        {gameState.showLanguage && (
+          <LanguageModal
+            onClickButton={() => setGameState((prev) => ({ ...prev, showLanguage: false }))}
+          />
+        )}
+
       </div>
     </Suspense>
   );
