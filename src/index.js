@@ -9,6 +9,7 @@ const urlSearchParams = new URLSearchParams(window.location.search);
 const params = Object.fromEntries(urlSearchParams.entries());
 if (Object.prototype.hasOwnProperty.call(params, 'reset')) {
   localStorage.clear();
+  window.history.replaceState({}, document.title, window.location.origin);
 }
 
 ReactDOM.render(
