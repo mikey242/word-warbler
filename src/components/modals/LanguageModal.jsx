@@ -5,13 +5,14 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import Modal from '../Modal';
 
-function LanguageModal({ onClickButton }) {
+function LanguageModal({ onClickButton, reset }) {
   const { t } = useTranslation();
   const currentLanguage = i18n?.language?.substring(0, 2);
 
   const changeLanguage = (lang) => {
     i18n.changeLanguage(lang);
     onClickButton();
+    reset();
   };
 
   return (
@@ -53,6 +54,7 @@ function LanguageModal({ onClickButton }) {
 
 LanguageModal.propTypes = {
   onClickButton: PropTypes.func.isRequired,
+  reset: PropTypes.func.isRequired,
 };
 
 export default LanguageModal;
