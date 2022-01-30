@@ -9,7 +9,7 @@
   "Got it!": "Duidelijk!",
   "How to play": "Spelregels",
   "Language": "Taal",
-  "languageChanged": "Taal veranderd in {{lang}}",
+  "languageChanged": "Taal veranderd naar {{lang}}",
   "letter is in secret word but in another position": "letter staat in het woord maar op een andere plek",
   "letter is in word and in correct position": "letter staat in het woord en op de juiste plek",
   "letter is not in secret word": "letter staat niet in het woord",
