@@ -7,45 +7,28 @@ import { useTranslation } from 'react-i18next';
 import WORDS from './constants/words';
 import Grid from './components/grid/Grid';
 import {
+  getLanguageName,
   getLastWordAsString, isCharacter, removeEmpty,
 } from './util/helpers';
 import Keyboard from './components/keyboard/Keyboard';
-import Bar from './components/Header';
-import { TIMING } from './constants/settings';
+import { DEFAULTSTATE, DEFAULTSTATS, TIMING } from './constants/settings';
 import Notification from './components/Notification';
 import useLocalStorage from './util/storage';
 import WinModal from './components/modals/WinModal';
 import LoseModal from './components/modals/LoseModal';
 import HelpModal from './components/modals/HelpModal';
 import LanguageModal from './components/modals/LanguageModal';
+import Header from './components/Header';
 
 function App() {
   const { t } = useTranslation();
   const [wordList, setWordList] = useState();
-  const [isNotWord, setIsNotWord] = useState();
-  const [gameState, setGameState] = useLocalStorage('state', {
-    hiddenWord: '',
-    status: 'new',
-    showIntro: true,
-    showLanguage: false,
-    guesses: [],
-    currentGuess: '',
-    isGameLost: false,
-    isGameWon: false,
-  });
-  const [stats, setStats] = useLocalStorage('stats', {
-    guesses: {
-      1: 0,
-      2: 0,
-      3: 0,
-      4: 0,
-      5: 0,
-      6: 0,
-    },
-    gamesWon: 0,
-    gamesLost: 0,
-  });
-  const errorTimer = useRef();
+  const [showLanguage, setShowLanguage] = useState(false);
+  const [notification, setNotification] = useState();
+  const [rowError, setRowError] = useState(false);
+  const [gameState, setGameState] = useLocalStorage('state', DEFAULTSTATE);
+  const [stats, setStats] = useLocalStorage('stats', DEFAULTSTATS);
+  const notificationTimer = useRef();
 
   const getHiddenWord = () => wordList[Math.floor(Math.random() * wordList.length)].toUpperCase();
 
@@ -98,17 +81,30 @@ function App() {
     }
   }, [gameState.guesses]);
 
+  const newNotification = (message, cb = null) => {
+    clearTimeout(notificationTimer.current);
+    setNotification(message);
+    notificationTimer.current = setTimeout(() => {
+      setNotification('');
+      if (cb && typeof cb === 'function') {
+        cb();
+      }
+    }, 1000);
+  };
+
   const isWord = () => {
     if (wordList.includes(gameState.currentGuess.toLowerCase())) return true;
-    clearTimeout(errorTimer.current);
-    setIsNotWord(true);
-    errorTimer.current = setTimeout(() => {
-      setIsNotWord(false);
-    }, 1000);
+    newNotification(t('Word not in list'), () => setRowError(false));
+    setRowError(true);
     return false;
   };
 
-  const isRowComplete = () => gameState.currentGuess.length > 4;
+  const isRowComplete = () => {
+    if (gameState.currentGuess.length > 4) return true;
+    newNotification(t('Not enough letters'), () => setRowError(false));
+    setRowError(true);
+    return false;
+  };
 
   const handleDelete = () => {
     const { currentGuess } = gameState;
@@ -120,7 +116,7 @@ function App() {
   };
 
   const handleCharacter = (char) => {
-    if (isRowComplete() || gameState.isGameLost || gameState.isGameWon) return;
+    if (gameState.currentGuess.length > 4 || gameState.isGameLost || gameState.isGameWon) return;
     setGameState((prev) => ({
       ...prev,
       status: 'in_progress',
@@ -199,6 +195,13 @@ function App() {
     });
   };
 
+  const changeLanguage = (lang) => {
+    i18n.changeLanguage(lang, () => {
+      newNotification(t('languageChanged', { lang: getLanguageName(lang) }));
+      reset();
+    });
+  };
+
   useEffect(() => {
     window.addEventListener('keydown', handleKeyPress);
     return () => window.removeEventListener('keydown', handleKeyPress);
@@ -207,44 +210,39 @@ function App() {
   return (
     <Suspense fallback="loading">
       <div className="flex flex-col items-center justify-between h-full max-w-[600px] mx-auto my-0">
-        <Bar
+        <Header
           setGameState={setGameState}
+          setShowLanguage={setShowLanguage}
         />
-        <Grid isNotWord={isNotWord} current={gameState.currentGuess} guesses={gameState.guesses} />
-        <div className="relative">
-          {isNotWord && <Notification message={t('Word not in list')} />}
-        </div>
+        <Grid rowError={rowError} current={gameState.currentGuess} guesses={gameState.guesses} />
+        <Notification isShown={!!notification} message={notification ?? ''} />
         <Keyboard
           handleSubmit={handleSubmit}
           handleDelete={handleDelete}
           handleCharacter={handleCharacter}
         />
-        {gameState.showIntro && (
-          <HelpModal
-            onClickButton={() => setGameState((prev) => ({ ...prev, showIntro: false }))}
-          />
-        )}
-        {gameState.isGameLost && (
-          <LoseModal
-            hiddenWord={gameState.hiddenWord}
-            stats={stats}
-            reset={reset}
-          />
-        )}
-        {gameState.isGameWon && (
-          <WinModal
-            hiddenWord={gameState.hiddenWord}
-            count={gameState.guesses.length}
-            stats={stats}
-            reset={reset}
-          />
-        )}
-        {gameState.showLanguage && (
-          <LanguageModal
-            onClickButton={() => setGameState((prev) => ({ ...prev, showLanguage: false }))}
-            reset={reset}
-          />
-        )}
+        <HelpModal
+          isOpen={gameState.showIntro}
+          handleClose={() => setGameState((prev) => ({ ...prev, showIntro: false }))}
+        />
+        <LoseModal
+          isOpen={gameState.isGameLost}
+          hiddenWord={gameState.hiddenWord}
+          stats={stats}
+          handleClose={reset}
+        />
+        <WinModal
+          isOpen={gameState.isGameWon}
+          hiddenWord={gameState.hiddenWord}
+          count={gameState.guesses.length}
+          stats={stats}
+          handleClose={reset}
+        />
+        <LanguageModal
+          isOpen={showLanguage}
+          changeLanguage={changeLanguage}
+          handleClose={() => setShowLanguage(false)}
+        />
 
       </div>
     </Suspense>

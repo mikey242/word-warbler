@@ -2,15 +2,11 @@ import { React } from 'react';
 import { Trans } from 'react-i18next';
 import PropTypes from 'prop-types';
 
-function Stats({ stats }) {
-//   const { t } = useTranslation();
-  const { guesses, gamesLost, gamesWon } = stats;
-  const wins = Object.values(stats).reduce((a, b) => a + b);
-
+function Stats({ gamesWon, gamesLost, guesses }) {
   return (
     <div className="mt-5">
       <div className="text-center mb-3">
-        <Trans i18nKey="results" wins={wins}>
+        <Trans i18nKey="results">
           Wins:
           {' '}
           {{ gamesWon }}
@@ -48,8 +44,16 @@ function Stats({ stats }) {
 }
 
 Stats.propTypes = {
+  gamesWon: PropTypes.number,
+  gamesLost: PropTypes.number,
   // eslint-disable-next-line react/forbid-prop-types
-  stats: PropTypes.object.isRequired,
+  guesses: PropTypes.object,
+};
+
+Stats.defaultProps = {
+  gamesWon: 0,
+  gamesLost: 0,
+  guesses: {},
 };
 
 export default Stats;

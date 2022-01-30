@@ -1,17 +1,17 @@
 import { useEffect, React } from 'react';
 import PropTypes from 'prop-types';
-import Button from './Button';
+import Button from '../Button';
 
 function Modal({
-  header, body, buttonLabel, onClickButton,
+  header, children, buttonLabel, handleClose, isOpen,
 }) {
   // Focus dismiss button on modal display.
   useEffect(() => {
-    document.getElementById('modal').querySelector('button')?.focus();
+    document.getElementById('modal')?.querySelector('button')?.focus();
   });
 
   return (
-    <>
+    <div className={isOpen ? 'fixed' : 'hidden'}>
       <div
         id="modal"
         className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none"
@@ -25,7 +25,7 @@ function Modal({
             </div>
             {/* body */}
             <div className="relative p-6 flex-auto">
-              <div className="my-4 text-lg leading-relaxed">{body}</div>
+              <div className="my-4 text-lg leading-relaxed">{children}</div>
             </div>
             {/* footer */}
             {buttonLabel && (
@@ -33,7 +33,7 @@ function Modal({
                 <Button
                   tabindex="0"
                   label={buttonLabel}
-                  onClick={onClickButton}
+                  onClick={handleClose}
                 />
               </div>
             )}
@@ -41,22 +41,23 @@ function Modal({
         </div>
       </div>
       <div className="opacity-50 fixed inset-0 z-40 bg-black" />
-    </>
+    </div>
   );
 }
 
 Modal.propTypes = {
   header: PropTypes.string,
-  // eslint-disable-next-line react/forbid-prop-types
-  body: PropTypes.object,
+  children: PropTypes.node,
   buttonLabel: PropTypes.string,
-  onClickButton: PropTypes.func.isRequired,
+  handleClose: PropTypes.func.isRequired,
+  isOpen: PropTypes.bool,
 };
 
 Modal.defaultProps = {
   header: '',
-  body: '',
+  children: '',
   buttonLabel: '',
+  isOpen: false,
 };
 
 export default Modal;

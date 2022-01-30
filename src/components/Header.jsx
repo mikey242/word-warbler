@@ -8,7 +8,7 @@ import { ReactComponent as Dark } from '../images/dark.svg';
 import { ReactComponent as Help } from '../images/help.svg';
 import { ReactComponent as Logo } from '../images/logo.svg';
 
-function Bar({ setGameState }) {
+function Header({ setGameState, setShowLanguage }) {
   const { t } = useTranslation();
   const [theme, setTheme] = useLocalStorage('theme');
 
@@ -57,7 +57,7 @@ function Bar({ setGameState }) {
           <button
             type="button"
             aria-label={t('Change language')}
-            onClick={() => setGameState((prev) => ({ ...prev, showLanguage: true }))}
+            onClick={() => setShowLanguage(true)}
           >
             <Language width="1.5em" />
           </button>
@@ -67,8 +67,9 @@ function Bar({ setGameState }) {
   );
 }
 
-Bar.propTypes = {
+Header.propTypes = {
   setGameState: PropTypes.func.isRequired,
+  setShowLanguage: PropTypes.func.isRequired,
 };
 
-export default Bar;
+export default Header;

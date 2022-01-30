@@ -1,5 +1,7 @@
 /* eslint-disable no-restricted-syntax */
-/* eslint-disable import/prefer-default-export */
+
+import i18n from 'i18next';
+
 /**
 * Removes empty elements from array.
 *
@@ -31,6 +33,18 @@ export function createQueryString(data) {
     if (val !== null && typeof val === 'object') val = createQueryString(val);
     return `${key}=${encodeURIComponent(`${val}`.replace(/\s/g, '_'))}`;
   }).join('&');
+}
+
+export function getLanguageName(code) {
+  const { t } = i18n;
+  switch (code) {
+    case 'en':
+      return t('English');
+    case 'nl':
+      return t('Dutch');
+    default:
+      return t('Unknown');
+  }
 }
 
 export function getOnlyLetters(guesses) {
