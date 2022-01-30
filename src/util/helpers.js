@@ -1,26 +1,13 @@
-/* eslint-disable no-restricted-syntax */
-
 import i18n from 'i18next';
 
-/**
-* Removes empty elements from array.
-*
-* @param {array} array Array to be cleaned.
-* @return {array} new arra.
-*/
 export function removeEmpty(array) {
-  const result = [];
-  for (const i of array) {
-    result.push(i);
-  }
-  return result;
+  return array.filter((item) => item !== null && typeof item !== 'undefined');
 }
 
-export function getLastWordAsString(array) {
+export function getLastWord(array) {
   const lastItem = array.at(-1);
   if (!lastItem?.length) return false;
-  const letters = lastItem.map((item) => item.letter);
-  return letters.join('');
+  return lastItem.map((item) => item.letter);
 }
 
 export function isCharacter(e) {
@@ -45,6 +32,10 @@ export function getLanguageName(code) {
     default:
       return t('Unknown');
   }
+}
+
+export function onlyUnique(value, index, self) {
+  return self.indexOf(value) === index;
 }
 
 export function getOnlyLetters(guesses) {

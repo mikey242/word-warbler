@@ -8,7 +8,7 @@ import WORDS from './constants/words';
 import Grid from './components/grid/Grid';
 import {
   getLanguageName,
-  getLastWordAsString, isCharacter, removeEmpty,
+  getLastWord, isCharacter, onlyUnique,
 } from './util/helpers';
 import Keyboard from './components/keyboard/Keyboard';
 import { DEFAULTSTATE, DEFAULTSTATS, TIMING } from './constants/settings';
@@ -29,7 +29,6 @@ function App() {
   const [gameState, setGameState] = useLocalStorage('state', DEFAULTSTATE);
   const [stats, setStats] = useLocalStorage('stats', DEFAULTSTATS);
   const notificationTimer = useRef();
-
   const getHiddenWord = () => wordList[Math.floor(Math.random() * wordList.length)].toUpperCase();
 
   useEffect(() => {
@@ -47,11 +46,15 @@ function App() {
 
   useEffect(() => {
     const { guesses, hiddenWord, status } = gameState;
-
-    const latest = getLastWordAsString(guesses);
+    if (!guesses.length) return;
+    setGameState((prev) => ({ ...prev, status: 'checking' }));
+    let state = {};
+    const latest = getLastWord(guesses);
+    const wrongLetters = guesses.at(-1).flatMap((entry) => (entry.status > 0 ? [] : entry.letter));
 
     // Win conditions.
-    if (latest === hiddenWord && status === 'in_progress') {
+    if (latest.join('') === hiddenWord && status === 'in_progress') {
+      state = { status: 'end', isGameWon: true };
       setStats((prev) => ({
         ...prev,
         gamesWon: stats.gamesWon + 1,
@@ -60,25 +63,24 @@ function App() {
           [guesses.length]: prev.guesses[guesses.length] + 1,
         },
       }));
-      setTimeout(() => {
-        setGameState((prev) => ({ ...prev, status: 'end', isGameWon: true }));
-      }, TIMING * 100 * 5);
-      return;
     }
 
     // Lose conditions.
     if (guesses.length > 5 && status === 'in_progress') {
+      state = { isGameLost: true, status: 'end', gamesLost: gameState.gamesLost + 1 };
       setStats((prev) => ({
         ...prev,
         gamesLost: stats.gamesLost + 1,
-
       }));
-      setTimeout(() => {
-        setGameState((prev) => ({
-          ...prev, isGameLost: true, status: 'end', gamesLost: gameState.gamesLost + 1,
-        }));
-      }, TIMING * 100 * 5);
     }
+
+    setTimeout(() => {
+      setGameState((prev) => ({
+        ...prev,
+        ...state,
+        wrongLetters: wrongLetters.concat(prev.wrongLetters).filter(onlyUnique),
+      }));
+    }, TIMING * 5);
   }, [gameState.guesses]);
 
   const newNotification = (message, cb = null) => {
@@ -116,11 +118,12 @@ function App() {
   };
 
   const handleCharacter = (char) => {
-    if (gameState.currentGuess.length > 4 || gameState.isGameLost || gameState.isGameWon) return;
+    const { currentGuess } = gameState;
+    if (gameState.currentGuess.length > 4) return;
     setGameState((prev) => ({
       ...prev,
       status: 'in_progress',
-      currentGuess: gameState.currentGuess + char.toUpperCase(),
+      currentGuess: currentGuess + char.toUpperCase(),
     }));
   };
 
@@ -130,22 +133,18 @@ function App() {
 
     // Get letters as array.
     const guessArray = gameState.currentGuess.split('');
-    let hiddenWordArray = gameState.hiddenWord.split('');
+    const hiddenWordArray = gameState.hiddenWord.split('');
 
     // Check exact matches.
-    const current = [];
-    guessArray.forEach((letter, i) => {
-      current[i] = {};
-      current[i].letter = letter;
+    const current = guessArray.flatMap((letter, i) => {
+      let status = 0;
       if (hiddenWordArray[i] === letter) {
-        current[i].status = 2;
+        status = 2;
         hiddenWordArray[i] = null;
         guessArray[i] = null;
       }
+      return { letter, status };
     });
-
-    // Clean empty values.
-    hiddenWordArray = removeEmpty(hiddenWordArray);
 
     // Check remaining letters for presence.
     guessArray.forEach((letter, i) => {
@@ -168,6 +167,8 @@ function App() {
   };
 
   const handleKeyPress = (e) => {
+    const { isGameLost, isGameWon, status } = gameState;
+    if (isGameLost || isGameWon || status === 'checking') return;
     // Add character
     if (isCharacter(e)) {
       handleCharacter(e.key);
@@ -190,6 +191,7 @@ function App() {
       isGameLost: false,
       status: 'new',
       guesses: [],
+      wrongLetters: [],
       currentGuess: '',
       hiddenWord: getHiddenWord(),
     });
@@ -220,6 +222,7 @@ function App() {
           handleSubmit={handleSubmit}
           handleDelete={handleDelete}
           handleCharacter={handleCharacter}
+          wrongLetters={gameState.wrongLetters}
         />
         <HelpModal
           isOpen={gameState.showIntro}

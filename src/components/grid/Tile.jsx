@@ -11,7 +11,7 @@ function Tile({ letter, status }) {
       setAnimate(true);
       const timer = setTimeout(() => {
         setAnimate(false);
-      }, TIMING * 100);
+      }, TIMING);
       return () => clearTimeout(timer);
     }
     return false;

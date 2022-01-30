@@ -1,4 +1,4 @@
-export const TIMING = 2;
+export const TIMING = 200; // Animation timing in ms
 
 export const DEFAULTSTATS = {
   guesses: {
@@ -20,6 +20,7 @@ export const DEFAULTSTATE = {
   showLanguage: false,
   guesses: [],
   currentGuess: '',
+  wrongLetters: [],
   isGameLost: false,
   isGameWon: false,
 };

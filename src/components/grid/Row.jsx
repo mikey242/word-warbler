@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { TIMING } from '../../constants/settings';
 import Tile from './Tile';
 
-function Row({ letters = [] }) {
+function Row({ letters }) {
   const [animate, setAnimate] = useState(false);
   const [status, setStatus] = useState();
 
@@ -16,7 +16,7 @@ function Row({ letters = [] }) {
       for (let i = 0; i <= len; i += 1) {
         timer = setTimeout(() => {
           setStatus(i);
-        }, (i * (TIMING * 100)) + (TIMING * 100) / 2);
+        }, (i * TIMING) + TIMING / 2);
       }
     }
     return clearTimeout(timer);
@@ -24,11 +24,11 @@ function Row({ letters = [] }) {
 
   return (
     <div className="grid grid-cols-5 gap-2">
-      {letters.length ? (
+      {letters?.length ? (
         letters.map((entry, i) => (
           <div
             style={{
-              animation: animate && `rotate ${TIMING * 100}ms linear ${i * (TIMING)}00ms`,
+              animation: animate && `rotate ${TIMING}ms linear ${i * (TIMING)}ms`,
             }}
             // eslint-disable-next-line react/no-array-index-key
             key={i}

@@ -1,23 +1,37 @@
 import { React } from 'react';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
-import { TOP, MIDDLE, BOTTOM } from '../../constants/keys';
+import {
+  TOP, MIDDLE, BOTTOM,
+} from '../../constants/keys';
 import Key from './Key';
 import { ReactComponent as Enter } from '../../images/enter.svg';
 import { ReactComponent as Backspace } from '../../images/backspace.svg';
 
-function Keyboard({ handleCharacter, handleSubmit, handleDelete }) {
+function Keyboard({
+  handleCharacter, handleSubmit, handleDelete, wrongLetters,
+}) {
   const { t } = useTranslation();
   return (
     <div id="keyboard" className="font-mono w-full mt-3">
       <div className="keyboard-row flex justify-center">
         {TOP.map((character) => (
-          <Key key={character} onClick={handleCharacter} character={character} />
+          <Key
+            key={character}
+            incorrect={wrongLetters.includes(character)}
+            onClick={handleCharacter}
+            character={character}
+          />
         ))}
       </div>
       <div className="keyboard-row flex justify-center">
         {MIDDLE.map((character) => (
-          <Key key={character} onClick={handleCharacter} character={character} />
+          <Key
+            key={character}
+            incorrect={wrongLetters.includes(character)}
+            onClick={handleCharacter}
+            character={character}
+          />
         ))}
       </div>
       <div className="keyboard-row flex justify-center">
@@ -31,7 +45,12 @@ function Keyboard({ handleCharacter, handleSubmit, handleDelete }) {
         />
 
         {BOTTOM.map((character) => (
-          <Key key={character} onClick={handleCharacter} character={character} />
+          <Key
+            key={character}
+            incorrect={wrongLetters.includes(character)}
+            onClick={handleCharacter}
+            character={character}
+          />
         ))}
         <Key
           key="delete"
@@ -50,6 +69,12 @@ Keyboard.propTypes = {
   handleCharacter: PropTypes.func.isRequired,
   handleSubmit: PropTypes.func.isRequired,
   handleDelete: PropTypes.func.isRequired,
+  // eslint-disable-next-line react/forbid-prop-types
+  wrongLetters: PropTypes.array,
+};
+
+Keyboard.defaultProps = {
+  wrongLetters: [],
 };
 
 export default Keyboard;
