@@ -63,10 +63,7 @@ function App() {
           [guesses.length]: prev.guesses[guesses.length] + 1,
         },
       }));
-    }
-
-    // Lose conditions.
-    if (guesses.length > 5 && status === 'in_progress') {
+    } else if (guesses.length > 5 && status === 'in_progress') {
       state = { isGameLost: true, status: 'end', gamesLost: gameState.gamesLost + 1 };
       setStats((prev) => ({
         ...prev,
