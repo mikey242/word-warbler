@@ -1,5 +1,5 @@
 import { React } from 'react';
-import { useTranslation } from 'react-i18next';
+import { useTranslation, Trans } from 'react-i18next';
 import PropTypes from 'prop-types';
 import Modal from './Modal';
 import Tile from '../grid/Tile';
@@ -43,17 +43,21 @@ function HelpModal({ handleClose, isOpen }) {
         </div>
         <div className="text-center mt-3">
           <small>
-            Word Warbler made by
-            {' '}
-            <a target="_blank" href="https://www.linkedin.com/in/michael-iseard/" rel="noreferrer">Michael Iseard</a>
+            <Trans i18nKey="madeBy">
+              Word Warbler made by
+              {' '}
+              <a target="_blank" href="https://www.linkedin.com/in/michael-iseard/" rel="noreferrer">Michael Iseard</a>
+            </Trans>
           </small>
           {' '}
           <span className="px-3 text-gray-300 dark:text-gray-600">|</span>
           {' '}
           <small>
-            Code available on
-            {' '}
-            <a target="_blank" href="https://gitlab.iseard.media/michael/word-game" rel="noreferrer">GitLab</a>
+            <Trans i18nKey="sourceText">
+              Code available on
+              {' '}
+              <a target="_blank" href="https://gitlab.iseard.media/michael/word-game" rel="noreferrer">GitLab</a>
+            </Trans>
           </small>
         </div>
       </>
