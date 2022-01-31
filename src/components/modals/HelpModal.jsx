@@ -41,6 +41,21 @@ function HelpModal({ handleClose, isOpen }) {
           </div>
           {t('letter is in word and in correct position')}
         </div>
+        <div className="text-center mt-3">
+          <small>
+            Word Warbler made by
+            {' '}
+            <a target="_blank" href="https://www.linkedin.com/in/michael-iseard/" rel="noreferrer">Michael Iseard</a>
+          </small>
+          {' '}
+          <span className="px-3 text-gray-300 dark:text-gray-600">|</span>
+          {' '}
+          <small>
+            Code available on
+            {' '}
+            <a target="_blank" href="https://gitlab.iseard.media/michael/word-game" rel="noreferrer">GitLab</a>
+          </small>
+        </div>
       </>
     </Modal>
   );
