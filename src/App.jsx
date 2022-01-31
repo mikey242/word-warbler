@@ -29,7 +29,10 @@ function App() {
   const [gameState, setGameState] = useLocalStorage('state', DEFAULTSTATE);
   const [stats, setStats] = useLocalStorage('stats', DEFAULTSTATS);
   const notificationTimer = useRef();
-  const getHiddenWord = () => wordList[Math.floor(Math.random() * wordList.length)].toUpperCase();
+  const getHiddenWord = () => {
+    const list = wordList.hidden;
+    return list[Math.floor(Math.random() * list.length)].toUpperCase();
+  };
 
   useEffect(() => {
     setWordList(WORDS[i18n.language]);
@@ -92,7 +95,9 @@ function App() {
   };
 
   const isWord = () => {
-    if (wordList.includes(gameState.currentGuess.toLowerCase())) return true;
+    const { guessable, hidden } = wordList;
+    const current = gameState.currentGuess.toLowerCase();
+    if (guessable.includes(current) || hidden.includes(current)) return true;
     newNotification(t('Word not in list'), () => setRowError(false));
     setRowError(true);
     return false;
@@ -116,7 +121,7 @@ function App() {
 
   const handleCharacter = (char) => {
     const { currentGuess } = gameState;
-    if (gameState.currentGuess.length > 4) return;
+    if (currentGuess.length > 4) return;
     setGameState((prev) => ({
       ...prev,
       status: 'in_progress',
