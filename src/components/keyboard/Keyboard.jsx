@@ -1,12 +1,12 @@
 import { React } from 'react';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
+import { BackspaceIcon } from '@heroicons/react/solid';
 import {
   KEYS,
 } from '../../constants/keys';
 import Key from './Key';
 import { ReactComponent as Enter } from '../../images/enter.svg';
-import { ReactComponent as Backspace } from '../../images/backspace.svg';
 
 function Keyboard({
   handleCharacter, handleSubmit, handleDelete, wrongLetters,
@@ -59,7 +59,7 @@ function Keyboard({
           label={t('Backspace')}
           onClick={handleDelete}
           character={(
-            <Backspace width="1.25em" />
+            <BackspaceIcon width="1.25em" />
           )}
         />
       </div>

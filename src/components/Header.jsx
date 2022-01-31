@@ -1,11 +1,10 @@
 import { React, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
+import {
+  InformationCircleIcon, MoonIcon, SunIcon, TranslateIcon,
+} from '@heroicons/react/solid';
 import useLocalStorage from '../util/storage';
-import { ReactComponent as Language } from '../images/language.svg';
-import { ReactComponent as Light } from '../images/light.svg';
-import { ReactComponent as Dark } from '../images/dark.svg';
-import { ReactComponent as Help } from '../images/help.svg';
 import { ReactComponent as Logo } from '../images/logo.svg';
 
 function Header({ setGameState, setShowLanguage }) {
@@ -40,7 +39,7 @@ function Header({ setGameState, setShowLanguage }) {
             aria-label={t('Show help')}
             onClick={() => setGameState((prev) => ({ ...prev, showIntro: true }))}
           >
-            <Help width="1.5em" />
+            <InformationCircleIcon width="1.5em" />
           </button>
           <button
             type="button"
@@ -49,9 +48,9 @@ function Header({ setGameState, setShowLanguage }) {
             onClick={toggleTheme}
           >
             {theme === 'dark' ? (
-              <Dark width="1.5em" />
+              <MoonIcon width="1.5em" />
             ) : (
-              <Light width="1.5em" />
+              <SunIcon width="1.5em" />
             )}
           </button>
           <button
@@ -59,7 +58,7 @@ function Header({ setGameState, setShowLanguage }) {
             aria-label={t('Change language')}
             onClick={() => setShowLanguage(true)}
           >
-            <Language width="1.5em" />
+            <TranslateIcon width="1.5em" />
           </button>
         </div>
       </div>

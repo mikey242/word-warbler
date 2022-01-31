@@ -183,15 +183,15 @@ function App() {
   };
 
   const reset = () => {
-    setGameState({
+    setGameState((prev) => ({
+      ...prev,
       isGameWon: false,
       isGameLost: false,
       status: 'new',
       guesses: [],
       wrongLetters: [],
       currentGuess: '',
-      hiddenWord: getHiddenWord(),
-    });
+    }));
   };
 
   const changeLanguage = (lang) => {
