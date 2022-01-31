@@ -2,7 +2,7 @@ import { React } from 'react';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import {
-  TOP, MIDDLE, BOTTOM,
+  KEYS,
 } from '../../constants/keys';
 import Key from './Key';
 import { ReactComponent as Enter } from '../../images/enter.svg';
@@ -12,6 +12,8 @@ function Keyboard({
   handleCharacter, handleSubmit, handleDelete, wrongLetters,
 }) {
   const { t } = useTranslation();
+  const { TOP, MIDDLE, BOTTOM } = KEYS;
+
   return (
     <div id="keyboard" className="font-mono w-full mt-3">
       <div className="keyboard-row flex justify-center">
