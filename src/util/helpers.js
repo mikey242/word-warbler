@@ -41,3 +41,12 @@ export function onlyUnique(value, index, self) {
 export function getOnlyLetters(guesses) {
   guesses.map((row) => row.map((letter) => letter.letter));
 }
+
+export function getWrongLetters(guess, word) {
+  return guess.flatMap((entry) => {
+    if (!word.includes(entry)) {
+      return entry;
+    }
+    return [];
+  });
+}

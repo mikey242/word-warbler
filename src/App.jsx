@@ -8,7 +8,7 @@ import WORDS from './constants/words';
 import Grid from './components/grid/Grid';
 import {
   getLanguageName,
-  getLastWord, isCharacter, onlyUnique,
+  getLastWord, getWrongLetters, isCharacter, onlyUnique,
 } from './util/helpers';
 import Keyboard from './components/keyboard/Keyboard';
 import { DEFAULTSTATE, DEFAULTSTATS, TIMING } from './constants/settings';
@@ -50,7 +50,7 @@ function App() {
     setGameState((prev) => ({ ...prev, status: 'checking' }));
     let state = {};
     const latest = getLastWord(guesses);
-    const wrongLetters = guesses.at(-1).flatMap((entry) => (entry.status > 0 ? [] : entry.letter));
+    const wrongLetters = getWrongLetters(latest, hiddenWord);
 
     // Win conditions.
     if (latest.join('') === hiddenWord && status === 'in_progress') {
