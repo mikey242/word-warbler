@@ -44,17 +44,17 @@ function HelpModal({ handleClose, isOpen }) {
         <div className="text-center mt-3">
           <small>
             <Trans i18nKey="madeBy">
-              Word Warbler made by
+              Made by
               {' '}
               <a target="_blank" href="https://www.linkedin.com/in/michael-iseard/" rel="noreferrer">Michael Iseard</a>
             </Trans>
           </small>
           {' '}
-          <span className="px-3 text-gray-300 dark:text-gray-600">|</span>
+          <span className="px-1 sm:px-3 text-gray-300 dark:text-gray-600">|</span>
           {' '}
           <small>
             <Trans i18nKey="sourceText">
-              Code available on
+              Available on
               {' '}
               <a target="_blank" href="https://gitlab.iseard.media/michael/word-game" rel="noreferrer">GitLab</a>
             </Trans>

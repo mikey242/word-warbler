@@ -213,7 +213,7 @@ function App() {
 
   return (
     <Suspense fallback="loading">
-      <div className="flex flex-col items-center justify-between h-full max-w-[600px] mx-auto my-0">
+      <div className="flex flex-col justify-between items-center min-h-screen max-w-[600px] mx-auto my-0">
         <Header
           setGameState={setGameState}
           setShowLanguage={setShowLanguage}
