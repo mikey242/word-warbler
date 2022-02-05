@@ -8079,7 +8079,6 @@ const WORDS = {
   },
   nl: {
     guessable: [
-
       'aaien',
       'aalen',
       'aalst',
