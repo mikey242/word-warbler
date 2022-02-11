@@ -26,7 +26,7 @@ function Header({ setGameState, setShowLanguage }) {
   };
 
   return (
-    <nav className="border-gray-300 dark:border-gray-600 border-b text-gray-600 dark:text-gray-300 mb-5 px-4 sm:px-4 py-2.5 w-full">
+    <nav className="border-gray-300 dark:border-gray-600 border-b text-gray-600 dark:text-gray-300 mb-3 xs:mb-5 px-4 py-1 xs:py-2.5 w-full">
       <div className="container flex flex-wrap justify-center items-center mx-auto">
         <div className="mr-auto flex items-center">
           <Logo className="rounded" width="2em" />

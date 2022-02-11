@@ -7,6 +7,9 @@ module.exports = {
         press: 'press 200ms ease-in-out',
         error: 'shake 200ms ease-in-out',
       },
+      screens: {
+        xs: '375px',
+      },
       keyframes: {
         press: {
           '0%': { transform: 'translateY(0)' },

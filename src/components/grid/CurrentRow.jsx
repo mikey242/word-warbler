@@ -9,7 +9,7 @@ function CurrentRow({ letters, rowError }) {
   const merged = [...letters, ...blanks];
 
   return (
-    <div className={classNames(rowError && 'animate-error', 'grid grid-cols-5 gap-2')}>
+    <div className={classNames(rowError && 'animate-error', 'grid grid-cols-5 gap-1 xs:gap-2')}>
       {merged.map((item, i) => (
         // eslint-disable-next-line react/no-array-index-key
         <Tile key={i} letter={item} />

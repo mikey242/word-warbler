@@ -23,7 +23,7 @@ function Row({ letters }) {
   }, [letters]);
 
   return (
-    <div className="grid grid-cols-5 gap-2">
+    <div className="grid grid-cols-5 gap-1 xs:gap-2">
       {letters?.length ? (
         letters.map((entry, i) => (
           <div
