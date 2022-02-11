@@ -29,20 +29,23 @@ function App() {
   const [gameState, setGameState] = useLocalStorage('state', DEFAULTSTATE);
   const [stats, setStats] = useLocalStorage('stats', DEFAULTSTATS);
   const notificationTimer = useRef();
-  const getHiddenWord = () => {
-    const list = wordList.hidden;
-    return list[Math.floor(Math.random() * list.length)].toUpperCase();
-  };
 
   useEffect(() => {
-    setWordList(WORDS[i18n.language]);
+    if (i18n.language) {
+      setWordList(WORDS[i18n.language]);
+      console.debug('word list set to', i18n.language);
+    }
   }, [i18n.language]);
 
   useEffect(() => {
-    if (!gameState.isGameWon && !gameState.isGameLost && (gameState.status !== 'in_progress')) {
+    const { status } = gameState;
+    if (wordList && status === 'new') {
+      const list = wordList.hidden;
+      const word = list[Math.floor(Math.random() * list.length)].toUpperCase();
+      console.debug('new hidden word', word);
       setGameState((prev) => ({
         ...prev,
-        hiddenWord: getHiddenWord(),
+        hiddenWord: word,
       }));
     }
   }, [wordList, gameState.isGameLost, gameState.isGameWon]);
@@ -50,7 +53,6 @@ function App() {
   useEffect(() => {
     const { guesses, hiddenWord, status } = gameState;
     if (!guesses.length) return;
-    setGameState((prev) => ({ ...prev, status: 'checking' }));
     let state = {};
     const latest = getLastWord(guesses);
     const wrongLetters = getWrongLetters(latest, hiddenWord);
@@ -91,7 +93,7 @@ function App() {
       if (cb && typeof cb === 'function') {
         cb();
       }
-    }, 1000);
+    }, 1500);
   };
 
   const isWord = () => {
@@ -169,8 +171,8 @@ function App() {
   };
 
   const handleKeyPress = (e) => {
-    const { isGameLost, isGameWon, status } = gameState;
-    if (isGameLost || isGameWon || status === 'checking') return;
+    const { isGameLost, isGameWon } = gameState;
+    if (isGameLost || isGameWon) return;
     // Add character
     if (isCharacter(e)) {
       handleCharacter(e.key);
@@ -187,6 +189,10 @@ function App() {
     }
   };
 
+  const toggleLanguageModal = () => {
+    setShowLanguage(!showLanguage);
+  };
+
   const reset = () => {
     setGameState((prev) => ({
       ...prev,
@@ -201,6 +207,7 @@ function App() {
 
   const changeLanguage = (lang) => {
     i18n.changeLanguage(lang, () => {
+      console.debug('language changed to', lang);
       newNotification(t('languageChanged', { lang: getLanguageName(lang) }));
       reset();
     });
@@ -211,12 +218,15 @@ function App() {
     return () => window.removeEventListener('keydown', handleKeyPress);
   }, [handleKeyPress]);
 
+  // Remove console statements in production
+  if (process.env.NODE_ENV === 'production') { console.debug = function noConsole() {}; }
+
   return (
     <Suspense fallback="loading">
       <div className="flex flex-col justify-between items-center min-h-screen max-w-[600px] mx-auto my-0">
         <Header
           setGameState={setGameState}
-          setShowLanguage={setShowLanguage}
+          setShowLanguage={toggleLanguageModal}
         />
         <Grid rowError={rowError} current={gameState.currentGuess} guesses={gameState.guesses} />
         <Notification isShown={!!notification} message={notification ?? ''} />
@@ -246,7 +256,7 @@ function App() {
         <LanguageModal
           isOpen={showLanguage}
           changeLanguage={changeLanguage}
-          handleClose={() => setShowLanguage(false)}
+          handleClose={toggleLanguageModal}
         />
 
       </div>
