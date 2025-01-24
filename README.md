@@ -1,6 +1,8 @@
 # Word Warbler
 
-![logo](https://github.com/user-attachments/assets/55c1a70a-5b79-45dc-9c58-364e6150435d)
+<p align="center">
+  <img width="300" height="300" src="https://github.com/user-attachments/assets/55c1a70a-5b79-45dc-9c58-364e6150435d">
+</p>
 
 Word Warbler is a word guessing game built using [Tailwind CSS](https://tailwindcss.com) and [Create React App](https://create-react-app.dev/). Localization is provided by [i18next](https://www.i18next.com/).
 
